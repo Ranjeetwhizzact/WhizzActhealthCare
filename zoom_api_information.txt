@@ -1,0 +1,10 @@
+zoom app
+
+Account id 
+Urgg3YLZQBWRy8jPSmSW3w
+
+client ID
+gysHKYDYSxquCo0ZhIFkew
+
+client secret key
+9HGCylE7jJfa0PtwtiZN2HsY7Ky8He9w

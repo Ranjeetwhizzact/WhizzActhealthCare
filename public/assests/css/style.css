@@ -1,0 +1,66 @@
+      
+         body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-transition {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+          }
+       #sidebar-toggle:checked ~ div.sidebar {
+            width: 50px; 
+        }
+      
+        #sidebar-toggle:checked ~ div.sidebar ~ div.main-content {
+            margin-left: 50px; 
+        }
+        #sidebar-toggle:checked ~ div nav span.navtext{display: none;}
+       #sidebar-toggle:checked ~ div > div > div .dashboardlogo {display: none;}
+        .sidebar {
+            transition: width 0.3s ease;
+        }
+
+        .main-content {
+            transition: margin-left 0.3s ease;
+        }
+        .dropdown-content {
+            display: none;
+        }
+
+        /* Show dropdown when the parent div is focused */
+        .dropdown:hover .dropdown-content,
+        .dropdown:focus-within .dropdown-content {
+            display: block;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+          
+          /* Hide scrollbar for Firefox */
+          .no-scrollbar {
+            scrollbar-width: none;
+          }
+          .modal-transition { transition: transform 0.3s ease, opacity 0.3s ease; }
+        @media (max-width: 904px)  {
+            #sidebar-toggle ~ div.sidebar {
+                width: 50px; 
+            }
+            #sidebar-toggle ~ div.sidebar ~ div.main-content {
+                margin-left: 50px; 
+            }
+            #sidebar-toggle:checked ~ div.sidebar {
+                width: 260px; 
+            }
+          
+            #sidebar-toggle:checked ~ div.sidebar ~ div.main-content {
+                margin-left: 260px; 
+            }
+            #sidebar-toggle:checked ~ div.sidebar  .sidebar span {
+                display: block; 
+            }
+            #sidebar-toggle:checked ~ div nav span.navtext{display:block;}
+            #sidebar-toggle ~ div nav span.navtext{display:none;}
+            #sidebar-toggle ~ div > div > div .dashboardlogo {display: none;}
+            #sidebar-toggle:checked ~ div > div > div .dashboardlogo {display: block;}
+        }
+
+       
+        /* .time-radiobutton:checked ~ label{background: black;color:#fff;} */
