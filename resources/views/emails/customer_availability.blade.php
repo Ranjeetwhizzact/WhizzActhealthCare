@@ -27,7 +27,7 @@
         </p>
 
         <p style="font-size: 14px; color: #374151;">Best Regards,</p>
-        <p style="font-size: 14px; font-weight: bold; color: #111827;">Honest Health Care</p>
+        <p style="font-size: 14px; font-weight: bold; color: #111827;">WhizzCare</p>
     </div>
 </body>
 </html>

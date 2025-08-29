@@ -4,7 +4,7 @@
     <div class="flex h-screen divide-x-2 divide-gray-100 ">
         <!-- Sidebar -->
         @include('common.sidenav')
-       
+
 
         <!-- Main Content -->
         <div class="main-content flex-1 ml-64 transition-all duration-300">
@@ -26,7 +26,7 @@
                 <div class="grid grid-cols-1">
 
                     <div class="w-full overflow-x-scroll  no-scrollbar">
-                        <form method="GET" action="{{ route('customers') }}">
+                        <form method="GET" action="{{ route('patient') }}">
                             <select name="status" onchange="this.form.submit()" class="w-48 border-2 py-1 px-2 rounded-sm">
                                 <option value="">All</option>
                                 <option value="unassigned" {{ request('status') == 'unassigned' ? 'selected' : '' }}>Unassigned</option>
@@ -47,17 +47,17 @@
                                 <th class="p-2 text-start capitalize border whitespace-nowrap">Action</th>
                             </thead>
                             <tbody>
-                               
+
                                 @if($patients->count())
                                 @php
                                 $cp = $patients->currentPage();
                                 $perpage =  $patients->perPage();
                                 $startNumber = ($cp - 1) * $perpage;
                                 @endphp
-                             
+
 
                                 @foreach ($patients as $i => $p )
-                                    
+
                                 <tr  >
                                     <td class="p-2 text-start capitalize border whitespace-nowrap">     {{ $startNumber + $i + 1 }}</td>
                                     <td class="p-2 text-start capitalize border whitespace-nowrap">{{$p->first_name}}&nbsp;{{$p->last_name}}</td>
@@ -74,10 +74,11 @@
                                     <td class="p-2 text-start capitalize border whitespace-nowrap flex items-center gap-2">
                                         <div>
 
-                                            {{-- <button type="button" class="view-btn modalToggle px-3 py-1 rounded-full bg-green-500 text-white hover:bg-green-400" data-id="{{ $p->id }}" ><i class="ri-eye-line"></i></button> --}}
+                                            <a href="{{ route('schedule', ['id' => $p->hashed_id]) }}"><button type="button" class="view-btn  px-3 py-1 rounded-full bg-green-500 text-white hover:bg-green-400" title="Book Appointment"><i class="ri-calendar-event-line"></i></button></a>
+
                                             <a href="{{ route('viewpatient', ['id' => $p->hashed_id]) }}" class="bg-yellow-500 text-white rounded-full px-3 py-1 inline-block bg-green-500 text-white hover:bg-green-400"><i class="ri-eye-line"></i></a>
                                         </div>
-                                     
+
                                         <div >
 
                                             <a href="{{ route('editpatient', ['id' => $p->hashed_id]) }}" class="bg-yellow-500 text-white rounded-full px-3 py-1 inline-block hover:bg-yellow-400"><i class="ri-edit-line"></i></a>
@@ -88,13 +89,13 @@
                                             <button type="submit" class=" bg-red-500 text-white text-xs px-3 py-1 rounded-full mb-0"><i class="ri-delete-bin-6-line"></i></button>
                                         </form>
 
-                                       
+
                                     </td>
                                 </tr>
                                 @endforeach
                                 @endif
-                
-                            </tbody> 
+
+                            </tbody>
                         </table>
                         <div class="flex justify-end">
 
@@ -103,18 +104,18 @@
                                     @if($patients->onFirstPage())
                                         <span class="text-gray-500 px-4 py-1 text-sm bg-gray-200 rounded">Previous</span>
                                     @else
-                                        <a href="{{ $patients->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}" 
+                                        <a href="{{ $patients->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                            class="px-4 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
                                             Previous
                                         </a>
                                     @endif
-                            
+
                                     <span class="text-gray-700">
                                         Page {{ $patients->currentPage() }} of {{ $patients->lastPage() }}
                                     </span>
-                            
+
                                     @if ($patients->hasMorePages())
-                                        <a href="{{ $patients->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}" 
+                                        <a href="{{ $patients->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                            class="px-4 py-1 bg-red-500 text-sm text-white rounded hover:bg-red-600">
                                             Next
                                         </a>
@@ -123,7 +124,7 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -141,12 +142,12 @@
         </div> --}}
     </div>
     <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
-  
+
     <!-- Modal Content -->
    <!-- Modal Container -->
 <div id="modalContent" class="fixed inset-0 flex items-center justify-center p-4 hidden transform scale-75 opacity-0 modal-transition">
     <div class="relative w-full max-w-md px-3 py-4 bg-white rounded-xl shadow-xl divide-y">
-        
+
         <!-- Modal Header with Close Button -->
         <div class="flex justify-between items-center">
             <h2 class="text-base font-semibold">Profile</h2>
@@ -158,7 +159,7 @@
         <!-- Profile Details Section -->
         <div id="productDetail" class="p-3">
             <div class="grid grid-cols-7 gap-3">
-                
+
                 <!-- Profile Image -->
                 <div class="col-span-7 ">
                     <div class="w-12 h-12 rounded-full">
@@ -216,10 +217,10 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 
-    
+
 </body>
 @section('script')
 <script>

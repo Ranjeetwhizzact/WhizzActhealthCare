@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeComtroller;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AuthController;
@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/download-word', [PatientController::class, 'downloadWord'])->name('download.word');
         Route::get('/user', [AuthController::class, 'user']);
         Route::get('/edituser/{id}',[AuthController::class,'edituser'])->name('edituser');
-        Route::get('/',[HomeComtroller::class,'index'])->name('dashboard');
+        Route::get('/',[HomeController::class,'index'])->name('dashboard');
         Route::get('/createdoctor',[DoctorController::class,'createdoctor']);
         Route::post('/storepatient',[PatientController::class,'storepatient']);
         Route::delete('/deletepatient/{id}',[PatientController::class,'deletepatient'])->name('deletepatient');
@@ -54,21 +54,21 @@ Route::middleware('auth')->group(function () {
         Route::post('/storepatientlog',[PatientController::class,'storepatientlog']);
         Route::get('/createpatient',[PatientController::class,'createpatient']);
         Route::get('/editpatient/{id}',[PatientController::class,'editpatient'])->name('editpatient');
-        Route::get('/customers', [PatientController::class, 'patients'])->name('customers');
+        Route::get('/patient', [PatientController::class, 'patients'])->name('patient');
         Route::get('/viewprescriptions/{id}',[PrescriptionController::class,'prescriptionForm'])->name('viewprescriptions');
         Route::post('/storerescription',[PrescriptionController::class,'storerescription']);
         Route::get('/prescription/{id}/pdf', [PrescriptionController::class, 'generatePrescription']);
 
 
         Route::post('/getrecording/{id}',[AppointmentController::class,'getRecording'])->name('getRecording');
-        
+
         Route::get('/schedule', [AppointmentController::class, 'index'])->name('schedule');
         Route::post('/schedule', [AppointmentController::class, 'scheduleCall'])->name('schedule-call');
         Route::get('/join-meeting/{id}', [AppointmentController::class, 'joinMeeting'])
         ->name('join.meeting');
-        
-        
-        // Route::get('/viewpatient', [PatientController::class, 'viewpatient'])->name('customers');
+
+
+        // Route::get('/viewpatient', [PatientController::class, 'viewpatient'])->name('patient');
         Route::get('/viewpatient/{id}', [PatientController::class, 'viewpatient'])->name('viewpatient');
         Route::get('/patient/{id}', [PatientController::class, 'show'])->name('patient.show');
         Route::post('/storeschedule', [ScheduleController::class, 'storeschedule'])->name('storeschedule');
@@ -79,12 +79,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/getavailabletimes',[AppointmentController::class,'checkdoctor']);
     });
     Route::post('/storereport',[AppointmentController::class,'storereport'])->name('storereport');
-    Route::get('/assignpatients',[ScheduleController::class,'assignpatients'])->name('assignpatients');
+    Route::get('/medical-history',[ScheduleController::class,'medicalHistory'])->name('medical-history');
+    Route::get('/video-consultation',[ScheduleController::class,'videoConsultation'])->name('video.consultation');
     Route::get('/report/{id}',[ReportController::class,'report'])->name('report');
     Route::post('/changestatus',[ScheduleController::class,'changestatus'])->name('changestatus');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
-Route::get('avalableform/{proposalno}', [HomeComtroller::class, 'avalableform']);
+Route::get('avalableform/{proposalno}', [HomeController::class, 'avalableform']);
 Route::post('customermail', [PatientController::class, 'customermail']);
 
 Route::get('/join-meeting/{id}', [AppointmentController::class, 'joinMeeting'])

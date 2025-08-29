@@ -10,7 +10,7 @@
           <img src="{{url('/assests/img/honestlogo.png')}}" alt="Dashboard Logo" class="h-12 hidden sm:block dashboardlogo">
 
       </div>
-     
+
   </div>
 
   <!-- Sidebar Navigation -->
@@ -25,15 +25,27 @@
         </li>
         @endif
          <li>
-            <a href="{{url('assignpatients')}}" class="cursor-pointer  flex items-center pl-3 py-2 {{ request()->is('assignpatients') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} hover:text-[#DC2626]  transition-colors">
-                <i class="ri-group-line text-xl"></i>
-                <span class="ml-5 navtext capitalize">Assigned Patients</span>
+            <a href="{{url('medical-history')}}" class="cursor-pointer  flex items-center pl-3 py-2 {{ request()->is('medical-history') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} hover:text-[#DC2626]  transition-colors">
+                <i class="ri-capsule-line text-xl"></i>
+                <span class="ml-5 navtext capitalize">Medical History</span>
             </a>
         </li>
-       
+         <li>
+            <a href="{{url('video-consultation')}}" class="cursor-pointer  flex items-center pl-3 py-2 {{ request()->is('video-consultation') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} hover:text-[#DC2626]  transition-colors">
+                <i class="ri-slideshow-3-line text-xl"></i>
+                <span class="ml-5 navtext capitalize">Video Consultation</span>
+            </a>
+        </li>
+
         @if(auth()->user()->role === 'superadmin')
+         <li>
+            <a href="{{url('schedule')}}" class="cursor-pointer {{ request()->is('schedule') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
+                <i class="ri-calendar-event-line"></i>
+                <span class="ml-5 navtext capitalize">Appointment</span>
+            </a>
+        </li>
         <li>
-            <a href="{{ route('customers') }}" class="cursor-pointer  flex items-center pl-3 py-2 {{ request()->is('patient') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} hover:text-[#DC2626]  transition-colors">
+            <a href="{{ route('patient') }}" class="cursor-pointer  flex items-center pl-3 py-2 {{ request()->is('patient') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} hover:text-[#DC2626]  transition-colors">
                 <i class="ri-group-line text-xl"></i>
                 <span class="ml-5 navtext capitalize">Patients</span>
             </a>
@@ -44,26 +56,21 @@
                 <span class="ml-5 navtext capitalize">Doctors</span>
             </a>
         </li>
-      
+
         {{-- <li>
             <a href="{{url('report')}}" class="cursor-pointer {{ request()->is('report') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
                 <i class="ri-file-chart-line text-xl"></i>
                 <span class="ml-5 navtext capitalize">Report</span>
             </a>
         </li>  --}}
-        
-        <li>
-            <a href="{{url('schedule')}}" class="cursor-pointer {{ request()->is('schedule') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
-                <i class="ri-history-line"></i>
-                <span class="ml-5 navtext capitalize">Schedules</span>
-            </a>
-        </li> 
+
+
         <li>
             <a href="{{url('user') }}" class="cursor-pointer {{ request()->is('register') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
                 <i class="ri-user-add-line"></i>
                 <span class="ml-5 navtext capitalize">Users</span>
             </a>
-        </li> 
+        </li>
         @endif
         <li>
             <form action="{{ route('logout') }}" method="POST"class="cursor-pointer fixed bottom-0 flex items-center pl-3 py-2 text-[#A1A1AA] hover:text-[#DC2626] transition-colors">

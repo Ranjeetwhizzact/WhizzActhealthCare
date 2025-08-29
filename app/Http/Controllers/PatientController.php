@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Mail;
@@ -28,8 +28,8 @@ class PatientController extends Controller
 
     public function show($id)
     {
-        $product = Patient::find($id); 
-        return response()->json($product); 
+        $product = Patient::find($id);
+        return response()->json($product);
 
     }
 
@@ -109,19 +109,19 @@ public function downloadWord()
     public function patients(Request $request) {
         $status = $request->get('status', '');
         $patientsQuery = Patient::orderBy('id', 'desc');
-        
+
         if (!empty($status)) {
             $patientsQuery->where('status', $status);
         }
-    
+
         $patients = $patientsQuery->paginate(10);
- 
+
         $patients->transform(function ($patient) {
             $hashedId = Hashids::encode($patient->id);
             $patient->hashed_id = $hashedId;
             return $patient;
         });
-    
+
         // Define status colors
         $statusColors = [
             'Unassigned' =>  'text-orange-500',
@@ -130,15 +130,15 @@ public function downloadWord()
             'rescheduled' => 'text-blue-500',
             'canceled'  => 'text-red-500',
         ];
-    
-        return view('customers', [
+
+        return view('patient', [
             'patients' => $patients,
             'statusColors' => $statusColors
         ]);
     }
-    
-    
-   
+
+
+
     public function createpatient(Request $request){
         return view('addpatient');
     }
@@ -153,7 +153,7 @@ public function downloadWord()
         $decoded = Hashids::decode($hashed_id);
         $patientId = $decoded[0];
         $patient = Patient::find($patientId);
-    
+
         if (!$patient) {
             return redirect()->back()->with('error', 'Patient not found.');
         }
@@ -168,7 +168,7 @@ public function downloadWord()
     //         'email' => 'required|email',
     //         'message' => 'required|string',
     //     ]);
-    
+
     //     // Save Data to Database
     //     $user = Auth::user()->email;
     //     $patientlog = new Patientlog;
@@ -178,10 +178,10 @@ public function downloadWord()
     //     $patientlog->created_by = $user;
     //     $patientlog->updated_by = $user;
     //     $patientlog->save();
-    
+
     //     // Generate PDF
     //     $pdf = Pdf::loadView('pdf.template', compact('patientlog'));
-    
+
     //     // Force download prompt (User can save it in the Downloads folder)
     //     return response()->streamDownload(function () use ($pdf) {
     //         echo $pdf->output();
@@ -213,21 +213,21 @@ public function downloadWord()
                             'email' => 'honesthealthcare3@gmail.com',
                         ]
                     ],
-                 
-                    
-                    
+
+
+
                     'variables' => [
                         'VAR1' => $request->customer_name,
                         'VAR2' => $request->proposal_number,
                         'VAR3' => $request->avalibledate,
                         'VAR4' => $request->start_time,
                         'VAR5' => $request->end_time,
-                        
+
                     ]
                 ]
             ],
             'from' => [
-                'name' => 'Honest Health Care',
+                'name' => 'WhizzCare',
                 'email' => 'honesthealthcare@email.whizzactsolutions.com'
             ],
             'domain' => 'email.whizzactsolutions.com',
@@ -251,8 +251,8 @@ public function downloadWord()
         //     'status' => $response->status(),
         //     'body' => $response->body()
         // ], $response->status());
-    
-    
+
+
     }
     public function deletepatient($hashed_id){
         $decoded = Hashids::decode($hashed_id);
@@ -260,9 +260,9 @@ public function downloadWord()
         $patient = Patient::find($patientId);
         $patient->delete();
         return back()->with('success', 'Patient is deleted Sucessfully');
-        
+
     }
-    
+
 public function storepatient(Request $request)
 {
     if (!empty($request->id)) {
@@ -314,11 +314,11 @@ public function storepatient(Request $request)
     $patient->save();
 
     $encryptedProposal = Crypt::encrypt($patient->proposal_number);
-   
+
     $honestdomain = env('APP_URL');
     $availabilityLink = "{$honestdomain}/avalableform/{$encryptedProposal}";
 //  if (empty($request->id)) {
-   
+
     $emailResponse = Http::withHeaders([
         'accept' => 'application/json',
         'authkey' => '400026Aum41tS2Xqb68664708P1',
@@ -330,7 +330,7 @@ public function storepatient(Request $request)
                 'email' => $request->email
             ]],
             'cc' => [[
-                'name' => 'Honest Health Care',
+                'name' => 'WhizzCare',
                 'email' => 'honesthealthcare3@gmail.com'
             ]],
             'variables' => [
@@ -341,7 +341,7 @@ public function storepatient(Request $request)
             ]
         ]],
         'from' => [
-            'name' => 'Honest Health Care',
+            'name' => 'WhizzCare',
             'email' => 'honesthealthcare@email.whizzactsolutions.com'
         ],
         'domain' => 'email.whizzactsolutions.com',
@@ -376,5 +376,5 @@ public function storepatient(Request $request)
 // }
 }
 
-    
+
 }

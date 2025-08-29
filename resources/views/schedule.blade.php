@@ -4,7 +4,7 @@
     <div class="flex h-screen divide-x-2 divide-gray-100 ">
         <!-- Sidebar -->
         @include('common.sidenav')
-       
+
 
         <!-- Main Content -->
         <div class="main-content flex-1 ml-64 transition-all duration-300">
@@ -16,18 +16,18 @@
 
                 @if(session('status') == 'success')
                     <div class="alert alert-success">
-                     <h5 class="text-green-500">{{ session('success') }}</h5>   
+                     <h5 class="text-green-500">{{ session('success') }}</h5>
                     </div>
                 @endif
-                            
+
          <form action="{{url('/schedule')}}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
             <div class="grid grid-cols-1 gap-4 ">
                 @csrf
                 <div >
                         <div class="w-1/2 m-auto  shadow-md px-4 py-6 rounded-md grid grid-cols-2 gap-4">
-                            
-                       
-                           
+
+
+
                             <!-- Last Name -->
                             {{-- <div class="col-span-2 md:col-span-1">
                                 <input type="hidden" name="id" value="{{isset($schedule->id)?$schedule->id:''}}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Insurance campany Name">
@@ -39,10 +39,10 @@
                                 <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm capitalize">Policy ID</label>
                                 <input type="text" name="policy_id" value="{{isset($schedule->policy_id)?$schedule->policy_id:''}}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="INS-XXXXXXXX-XX" pattern="^INS-\d{8}-HI$" required>
                             </div> --}}
-                            
-                          
+
+
                             <!-- Blood Group -->
-                         
+
                             <!-- Address (Full Width) -->
                             {{-- <div class="col-span-2 md:col-span-1">
                                 <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm ">Reason for the Consultation</label>
@@ -80,41 +80,38 @@
                                     <input type="file" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Documents" name="previous_consultations_docs">
                                 </div>
                             </div> --}}
-                           
-                            
+
+
                             <div class="col-span-2 ">
-                                <h5 class="ps-3 font-medium my-2 "> Schedule Call</h5>
+                                <h5 class="ps-3 font-medium my-2 "> Schedule Call {{ isset($patient) ? 'For '. $patient->first_name . ' ' . $patient->last_name : '' }}</h5>
                                 <input type="hidden" name="email"  id="clientemail" class="w-full border border-gray-300 p-2 rounded-lg">
-                                  <div class="col-span-2">
-        <label for="patients-search" class="block text-gray-700 font-medium mb-2 text-sm">
-            Proposal Number / Name / Email / Phone
-        </label>
-        <input 
-            type="text" 
-            id="patients-search" 
-            name="proposal_number" 
-            class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" 
-            placeholder="Search by proposal number, name, email, or phone" 
-            required
-        >
-        <input type="hidden" id="patient-id" name="client_id">
-    </div>
+                                  <div class="col-span-2" @if($patient) hidden @endif>
+
+                                    <label for="patients-search" class="block text-gray-700 font-medium mb-2 text-sm">
+                                        Proposal Number / Name / Email / Phone
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="patients-search"
+                                        name="proposal_number"
+                                        class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                        placeholder="Search by proposal number, name, email, or phone"
+                                        required @if($patient) disabled @endif
+                                    >
+                                    <input type="hidden" id="patient-id" name="client_id" value="{{ isset($patient) ? $patient->id : '' }}" >
+                                </div>
                                 <div class="px-2">
                                     <label class="font-medium ps-2 text-sm inline-block w-full my-2">Appoint Patient</label>
-                                    <input type="text" id="assign_patient_name" name="assign_patient_name" class="w-full border border-gray-300 p-2 rounded-lg" name="" placeholder="Search Patient">
+                                    <input type="text" id="assign_patient_name" name="assign_patient_name" class="w-full border border-gray-300 p-2 rounded-lg" name="" placeholder="Search Patient" value="{{ isset($patient) ? $patient->first_name . ' ' . $patient->last_name : '' }}">
                                 </div>
-                                
+
                             </div>
 
                             <div class="col-span-2">
                                 <div class="px-2">
                                     <label for="" class="font-medium ps-2 text-sm inline-block w-full my-2">Appointment Date</label>
-                                   
                                         <p> <input type="text"  name="date" id="date"  value="{{isset($schedule->appointment_date)?$schedule->appointment_date:''}}" class="appointdate w-full border border-gray-300 p-2 rounded-lg"></p>
-                            
-                                  
                                    </div>
-                                
                             </div>
                             <div class="col-span-2 ">
                                 <div class="p-3">
@@ -161,14 +158,14 @@
                                             <label for="time9" class="block peer-checked:bg-red-500 peer-checked:text-white bg-red-100 text-sm py-2 px-3 rounded-md text-red-500 w-full text-center cursor-pointer">4:45 PM</label>
                                         </div>
                                     </div>
-                                    
-                                    
+
+
                                    </div>
-                                  
+
                             </div>
-                          
+
                             <div class="col-span-2">
-                            
+
                                 <div class="px-2">
                                  <label for="" class="font-medium ps-2 text-sm inline-block w-full my-2">Appoint Doctor</label>
                                  <select id="doctorSelect" class="py-2 border rounded-md w-full" name="doctor_id">
@@ -179,41 +176,41 @@
                                          <option value="{{ $doctor['doctor_id'] }}">{{ $doctor['first_name'] }} {{ $doctor['last_name'] }}</option>
                                      @endforeach
                                  @endif
-                                 
+
                                 </select>
                                 </div>
-                                
+
                                 <div class="mt-4 text-centercol-span-2 hidden md:block">
                                     <button type="submit" class="bg-black text-white px-6 py-2 rounded-lg  hover:bg-gray-500">Submit</button>
                                 </div>
                             </div>
                         </div>
-            
+
                         <!-- Submit Button -->
                     </div>
-                   
+
             </form>
             <form >
                 {{-- <label for="date">Select Date:</label>
                 <input type="date" id="date" name="date"><br><br> --}}
-            
+
                 {{-- <label>Select Available Time Slots:</label><br>
                 <input type="checkbox" class="time-checkbox" value="09:00"> 09:00 AM<br>
                 <input type="checkbox" class="time-checkbox" value="12:30"> 12:30 AM<br>
                 <input type="checkbox" class="time-checkbox" value="19:50"> 19:50 PM<br>
                 <input type="checkbox" class="time-checkbox" value="19:00"> 07:00 PM<br> --}}
-                
+
                 <br>
-                
-{{--             
+
+{{--
                 <h3>Available Doctors:</h3>
                 <div id="result"></div> --}}
-            
+
             </form>
             </div>
         </div>
     </div>
-   
+
 </body>
 @section('script')
 <script>
@@ -222,7 +219,7 @@ $(function() {
     $.ajax({
         url: "/searchpatients",
         type: "GET",
-        data: { query: query }, // send generic "query"
+        data: { query: query },
         dataType: "json",
         success: function(data) {
             if (data && data.length > 0) {
@@ -321,7 +318,7 @@ $(function() {
 
 $(function() {
 $("#date").datepicker({
-        minDate: 0 
+        minDate: 0
     });
     });
 
@@ -338,18 +335,18 @@ $("#date").datepicker({
             console.log("Selected Date:", selectedDate); // Debugging output
 
             $.ajax({
-                url: "/getavailabletimes", 
+                url: "/getavailabletimes",
                 type: "GET",
                 data: { date: selectedDate, time: selectedTime },
                 dataType: "json",
                 success: function (response) {
-                    let doctorList = response.doctorList || []; 
-                    let $doctorDropdown = $('#doctorSelect'); 
+                    let doctorList = response.doctorList || [];
+                    let $doctorDropdown = $('#doctorSelect');
 
                     $doctorDropdown.empty(); // Clear previous options
 
                     if (doctorList.length > 0) {
-                        $doctorDropdown.append('<option value="">Select a Doctor</option>'); 
+                        $doctorDropdown.append('<option value="">Select a Doctor</option>');
                         doctorList.forEach(function (doctor) {
                             let option = `<option value="${doctor.doctor_id}">${doctor.first_name} ${doctor.last_name}</option>`;
                             $doctorDropdown.append(option);
@@ -359,13 +356,13 @@ $("#date").datepicker({
                     }
                 },
                 error: function (xhr, status, error) {
-    console.error("AJAX Error Details:", {
-        status: status,
-        error: error,
-        responseText: xhr.responseText
-    });
-    alert("Error fetching available doctors. Please check the console.");
-}
+                    console.error("AJAX Error Details:", {
+                        status: status,
+                        error: error,
+                        responseText: xhr.responseText
+                    });
+                    alert("Error fetching available doctors. Please check the console.");
+                }
             });
         }
     });

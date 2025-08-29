@@ -6,7 +6,7 @@
 <body style="font-family: Arial, sans-serif; color: #333333; line-height: 1.6; margin: 0; padding: 20px; background-color: #f9f9f9;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
         <div style="text-align: center;">
-            <img src="{{url('/assests/img/honestlogo.png')}}" alt="Honest Health Care" style="max-width: 180px; margin-bottom: 20px;">
+            <img src="{{url('/assests/img/honestlogo.png')}}" alt="WhizzCare" style="max-width: 180px; margin-bottom: 20px;">
         </div>
 
         <p style="margin-top: 0;">Dear Admin,</p>
@@ -22,10 +22,10 @@
         <p>Please arrange accordingly.</p>
 
         <p>Best Regards,<br>
-        Honest Health Care Team</p>
+        WhizzCare Team</p>
 
         <div style="margin-top: 40px; font-size: 14px; color: #777777; text-align: center; border-top: 1px solid #eeeeee; padding-top: 20px;">
-            <p style="margin: 0;">Honest Health Care Pvt. Ltd.<br>
+            <p style="margin: 0;">WhizzCare Pvt. Ltd.<br>
             Mumbai, Maharashtra - 400068<br>
             Email: <a href="mailto:honesthealthcare3@gmail.com" style="color: #007BFF; text-decoration: none;">honesthealthcare3@gmail.com</a><br>
             Website: <a href="honesthealthcare3@gmail.com" target="_blank" style="color: #007BFF; text-decoration: none;">honesthealthcare3@gmail.com</a></p>
