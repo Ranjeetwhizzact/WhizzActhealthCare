@@ -85,9 +85,9 @@
                             <div class="col-span-2 ">
                                 <h5 class="ps-3 font-medium my-2 "> Schedule Call</h5>
                                 <input type="hidden" name="email"  id="clientemail" class="w-full border border-gray-300 p-2 rounded-lg">
-                                  <div class="col-span-2">
+                                  <div class="col-span-2 px-2">
         <label for="patients-search" class="block text-gray-700 font-medium mb-2 text-sm">
-            Proposal Number / Name / Email / Phone
+            Phone
         </label>
         <input 
             type="text" 
@@ -166,7 +166,22 @@
                                    </div>
                                   
                             </div>
-                          
+                            <div class="col-span-2 px-2">
+    <label for="appointment-type" class="block text-gray-700 font-medium mb-2 text-sm">
+        Appointment Type
+    </label>
+    <select 
+        id="appointment-type" 
+        name="appointment_type" 
+        class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        required
+    >
+        <option value="" disabled selected>Select Appointment Type</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline / In-person</option>
+    </select>
+</div>
+
                             <div class="col-span-2">
                             
                                 <div class="px-2">
@@ -218,15 +233,15 @@
 @section('script')
 <script>
 $(function() {
-  function fetchPatientByProposal(query) {
+// Fetch patient data and populate fields
+function fetchPatientByProposal(query) {
     $.ajax({
         url: "/searchpatients",
         type: "GET",
-        data: { query: query }, // send generic "query"
+        data: { query: query },
         dataType: "json",
         success: function(data) {
             if (data && data.length > 0) {
-                // Try to match by proposal_number, email, phone, or name
                 let selectedPatient = data.find(patient =>
                     patient.proposal_number === query ||
                     patient.email === query ||
@@ -234,24 +249,14 @@ $(function() {
                     patient.first_name.toLowerCase() === query.toLowerCase()
                 );
 
-                if (selectedPatient) {
-                    $("#patient-id").val(selectedPatient.id);
-                    $("#assign_patient_name").val(selectedPatient.first_name + " " + selectedPatient.last_name);
-                    $("#patients-search").val(selectedPatient.proposal_number);
-                    $("#clientemail").val(selectedPatient.email);
-                    $("#clientphone").val(selectedPatient.phone_number); // added phone
-                    $("#date").val(selectedPatient.providedate);
-                } else {
-                    console.log("No exact matching patient found, showing first result.");
-                    // fallback: use the first result
-                    let fallback = data[0];
-                    $("#patient-id").val(fallback.id);
-                    $("#assign_patient_name").val(fallback.first_name + " " + fallback.last_name);
-                    $("#patients-search").val(fallback.proposal_number);
-                    $("#clientemail").val(fallback.email);
-                    $("#clientphone").val(fallback.phone_number);
-                    $("#date").val(fallback.providedate);
-                }
+                if (!selectedPatient) selectedPatient = data[0];
+
+                $("#patient-id").val(selectedPatient.id);
+                $("#assign_patient_name").val(selectedPatient.first_name + " " + selectedPatient.last_name);
+                // $("#patients-search").val(selectedPatient.proposal_number);
+                // $("#clientemail").val(selectedPatient.email);
+                // $("#clientphone").val(selectedPatient.phone);
+                // $("#date").val(selectedPatient.providedate);
             } else {
                 console.log("No patient data returned.");
             }
@@ -262,33 +267,57 @@ $(function() {
     });
 }
 
-    $("#patients-search").autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: "/searchpatients",
-                type: "GET",
-                data: { term: request.term },
-                dataType: "json",
-                success: function(data) {
-                    response($.map(data, function(patient) {
-                        return {
-                            label: patient.proposal_number,
-                            value: patient.proposal_number,
-                            id: patient.id,
-                            data: patient
-                        };
-                    }));
-                },
-                error: function(xhr, status, error) {
-                    console.log("AJAX Error:", error);
-                }
-            });
-        },
-        minLength: 1,
-        select: function(event, ui) {
-            fetchPatientByProposal(ui.item.value);
-        }
-    });
+$("#patients-search").autocomplete({
+    source: function(request, response) {
+        $.ajax({
+            url: "/searchpatients",
+            type: "GET",
+            data: { term: request.term },
+            dataType: "json",
+            success: function(data) {
+                response($.map(data, function(patient) {
+                    return {
+                        label: `  `,
+                        value: patient.phone, // input shows phone number
+                        data: patient // store full patient data
+                    };
+                }));
+            },
+            error: function(xhr, status, error) {
+                console.log("AJAX Error:", error);
+            }
+        });
+    },
+    minLength: 1,
+    select: function(event, ui) {
+        // Directly use the selected patient's ID and details
+        let selectedPatient = ui.item.data;
+
+        $("#patient-id").val(selectedPatient.id);
+        $("#assign_patient_name").val(selectedPatient.first_name + " " + selectedPatient.last_name);
+        // $("#patients-search").val(selectedPatient.phone_number); // or any value you want to show
+        // $("#clientemail").val(selectedPatient.email);
+        // $("#clientphone").val(selectedPatient.phone);
+        // $("#date").val(selectedPatient.providedate);
+    }
+});
+
+// Customize dropdown style
+$.ui.autocomplete.prototype._renderItem = function(ul, item) {
+    return $("<li>")
+        .append(` 
+            <div class="bg-white flex hover:bg-blue-500 hover:text-white p-4 border border-gray-200 gap-4 rounded-md cursor-pointer">
+                <div>
+                    <strong class="text-sm text-gray-800">${item.data.first_name} ${item.data.last_name}</strong><br>
+                    <span class="text-gray-600">Phone: ${item.data.phone}</span><br>
+                    <span class="text-gray-600">Email: ${item.data.email}</span>
+                </div>
+            </div>
+        `)
+        .appendTo(ul);
+};
+
+
 
     $("#assign_patient_name").autocomplete({
         source: function(request, response) {
@@ -301,7 +330,7 @@ $(function() {
                     response($.map(data, function(patient) {
                         return {
                             label: patient.first_name + " " + patient.last_name,
-                            value: patient.proposal_number,
+                            // value: patient.proposal_number,
                             id: patient.id,
                             data: patient
                         };

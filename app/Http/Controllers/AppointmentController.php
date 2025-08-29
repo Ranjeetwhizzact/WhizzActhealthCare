@@ -162,7 +162,11 @@ public function scheduleCall(Request $request)
         Log::info('Doctor and client fetched', ['doctor_id' => $doctor->user_id, 'client_id' => $client->id]);
 
         // Create Zoom meeting
-        $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
+     if ($request->appointment_type == "online") {
+    $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
+}
+
+       
         Log::info('Zoom meeting created', ['zoomMeeting' => $zoomMeeting]);
 
         if (isset($zoomMeeting['error'])) {
@@ -176,6 +180,7 @@ public function scheduleCall(Request $request)
             'doctor_id' => $doctor->user_id,
             'start_time' => $startTime,
             'end_time' => $endTime,
+            'appointment_type'=>$request->$appointment_type,
             'zoom_meeting_id' => $zoomMeeting['id'],
             'zoom_join_url' => $zoomMeeting['join_url'],
             'zoom_start_url' => $zoomMeeting['start_url'],

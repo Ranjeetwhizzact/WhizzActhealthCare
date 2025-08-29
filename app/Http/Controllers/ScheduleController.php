@@ -180,18 +180,10 @@ public function changestatus(Request $request)
     }
 public function searchpatients(Request $request)
 {
-    $query = $request->get('term', '');
+     $term = $request->get('term') ?? $request->get('query');
 
-    $patients = Patient::select('id', 'first_name', 'last_name', 'proposal_number', 'email', 'phone_number', 'providedate')
-        ->where(function ($q) use ($query) {
-            $q->where('proposal_number', 'LIKE', "%{$query}%")
-              ->orWhere('first_name', 'LIKE', "%{$query}%")
-              ->orWhere('last_name', 'LIKE', "%{$query}%")
-              ->orWhere('email', 'LIKE', "%{$query}%")
-              ->orWhere('phone_number', 'LIKE', "%{$query}%");
-        })
-        ->orderBy('id', 'desc')
-        ->limit(10)
+    $patients = Patient::where('phone', 'LIKE', "%{$term}%")
+        ->take(10) // limit results for autocomplete
         ->get();
 
     return response()->json($patients);
