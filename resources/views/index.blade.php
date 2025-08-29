@@ -62,12 +62,12 @@
                         </div>
                     </div>
                 </div>
-               
+
                  <div class="grid grid-cols-3 gap-7 my-4">
                     <div class="col-span-3 lg:col-span-2">
                         <div class="flex justify-between">
                             <h5 class="text-lg font-semibold capitalize">Application Status Summary</h5>
-                            <a href="{{url('assignpatients')}}" class="underline underline-offset-3 text-blue-400 capitalize font-semibold text-nowrap">see All</a>
+                            <a href="{{url('medical-history')}}" class="underline underline-offset-3 text-blue-400 capitalize font-semibold text-nowrap">see All</a>
                         </div>
                         <div class="overflow-x-scroll  no-scrollbar">
 
@@ -83,9 +83,9 @@
                                 <tbody>
                                     @if($appointments)
                                     @foreach ($appointments as $p)
-                                        
+
                                     <tr>
-                                        <td class="min-w-[180px]"> 
+                                        <td class="min-w-[180px]">
                                             <div class="flex items-center px-3  py-2 gap-3">
                                                 {{-- <img src="{{url($p->profile_img)}}" alt="" srcset="" class="w-9 h-9 rounded-full"> --}}
                                                 <div>
@@ -105,11 +105,11 @@
                                     </tr>
                                     @endforeach
                                     @endif
-                                
+
                                 </tbody>
                             </table>
                         </div>
-                        <div id="chart" class="border-2 border-gray-100 rounded-lg mt-4"></div> 
+                        <div id="chart" class="border-2 border-gray-100 rounded-lg mt-4"></div>
                     </div>
                     <div class="md:col-span-2 lg:col-span-1">
 
@@ -120,18 +120,18 @@
                                     <div class=" flex justify-between mb-3">
                                         <div class="font-semibold text-xl"> {{ \Carbon\Carbon::parse($selectedDate)->format('d M, Y') }} </div>
                                         <div class="">
-                                            <a href="{{ route('dashboard', ['date' => \Carbon\Carbon::parse($selectedDate)->subDay()->format('Y-m-d')]) }}" 
+                                            <a href="{{ route('dashboard', ['date' => \Carbon\Carbon::parse($selectedDate)->subDay()->format('Y-m-d')]) }}"
                                                 class="btn btn-primary {{ $dayappointments->isEmpty() && $selectedDate <= \Carbon\Carbon::today()->format('Y-m-d') ? 'disabled' : '' }}">
-            
+
                                                 <i class="ri-arrow-left-s-line"></i>
                                             </a>
-                                            <a href="{{ route('dashboard', ['date' => \Carbon\Carbon::parse($selectedDate)->addDay()->format('Y-m-d')]) }}" 
+                                            <a href="{{ route('dashboard', ['date' => \Carbon\Carbon::parse($selectedDate)->addDay()->format('Y-m-d')]) }}"
                                                 class="btn btn-primary {{ $dayappointments->isEmpty() ? 'disabled' : '' }}">
-                                  
+
                                                 <i class="ri-arrow-right-s-line"></i>
                                             </a>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <ul class="">
@@ -142,17 +142,17 @@
                                     <li class="flex justify-between py-1">
                                        {{-- <div class="col-span-2  ">
                                            <div class=" relative">
-           
+
                                                <div class="w-9 inline-block h-9 rounded-full absolute start-0 z-10 border-2 border-gray-100">
-               
+
                                                    <img src="{{url($a->profile_img)}}" alt="Dashboard Logo" class="w-full h-full object-contain rounded-full ">
                                                </div>
                                                <div class="w-9 inline-block h-9 rounded-full absolute end-0 border-2 border-gray-100 z-20 bg-gray-700">
-               
+
                                                    <img src="{{url($a->doctor_profile)}}" alt="Dr." class="w-full h-full object-contain rounded-full text-center ">
                                                </div>
                                            </div>
-                                           
+
                                        </div> --}}
                                        <div class="">
                                            <p class="text-base font-semibold">{{$a->patient_first_name}} - Dr.{{$a->doctor_first_name}}</p>
@@ -162,13 +162,13 @@
                                     </li>
                                     @endforeach
                                     @endif
-                          
+
                              </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-span-2">
-                        
+
                     </div>
                  </div>
             </div>

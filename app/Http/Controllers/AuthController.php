@@ -22,13 +22,13 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $user = Auth::user(); 
+            $user = Auth::user();
             if ($user->role === 'superadmin') {
                 return redirect()->route('dashboard'); // Show index if superadmin
             } else {
-                return redirect()->route('assignpatients'); // Redirect if not superadmin
+                return redirect()->route('medical-history'); // Redirect if not superadmin
             }
-            
+
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.']);
@@ -64,19 +64,19 @@ class AuthController extends Controller
         //     'password' =>  'nullable|min:6|confirmed' ,
         //     'role' => 'required|in:superadmin,admin,user'
         // ]);
-    
+
         // $userData = [
         //     'name' => $request->name,
         //     'email' => $request->email,
         //     'role' => $request->role,
         //     'password' => $request->password
         // ];
-    
+
         // Only hash password if provided
         // if ($request->filled('password')) {
         //     $userData['password'] = Hash::make($request->password);
         // }
-    
+
         // User::updateOrCreate(['id' => $id], $userData);
         return redirect()->back()->with('success', $id ? 'User updated successfully!' : 'User created successfully!');
     }

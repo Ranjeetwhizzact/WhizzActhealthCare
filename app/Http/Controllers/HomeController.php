@@ -11,27 +11,31 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\Schedule;
 use App\Models\Doctor;
 use App\Models\Patient;
+use App\Models\Setting;
 
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
 
 
-class HomeComtroller extends Controller
+class HomeController extends Controller
 {
     //
+    public static function setting(){
+        return Setting::where('is_active',1)->first();
+    }
 
     public function index(Request $request){
         $totalCount = DB::table('appointments as a')
         ->join('patients as p', 'a.client_id', '=', 'p.id')
         ->join('doctors as d', 'a.doctor_id', '=', 'd.user_id')
-      
+
         ->count();
 
         $todayCount =  DB::table('appointments as a')
         ->join('patients as p', 'a.client_id', '=', 'p.id')
         ->join('doctors as d', 'a.doctor_id', '=', 'd.user_id')
-      
-    ->whereDate('a.start_time', Carbon::today()) 
+
+    ->whereDate('a.start_time', Carbon::today())
     ->count();
 
         $appointments = DB::table('appointments as a')
@@ -58,23 +62,23 @@ class HomeComtroller extends Controller
         'a.start_time as appointment_date',
         'd.last_name as doctor_last_name'
     )
-    ->paginate(7); 
+    ->paginate(7);
 
     $completedAppointments =  DB::table('appointments as a')
     ->join('patients as p', 'a.client_id', '=', 'p.id')
     ->join('doctors as d', 'a.doctor_id', '=', 'd.user_id')
-  
+
     ->where('p.status','completed')
-    ->whereDate('a.start_time', Carbon::today()) 
-    
-    ->count(); 
+    ->whereDate('a.start_time', Carbon::today())
+
+    ->count();
 
     $pendingAppointments =  DB::table('appointments as a')
     ->join('patients as p', 'a.client_id', '=', 'p.id')
     ->join('doctors as d', 'a.doctor_id', '=', 'd.user_id')
     ->where('p.status','scheduled')
-    ->whereDate('a.start_time',Carbon::today()) 
-    ->count(); 
+    ->whereDate('a.start_time',Carbon::today())
+    ->count();
 
     $statusColors = [
         'scheduled'   => 'text-yellow-500',
@@ -82,7 +86,7 @@ class HomeComtroller extends Controller
         'rescheduled' => 'text-blue-500',
         'canceled'    => 'text-red-500',
     ];
-        
+
     $selectedDate = $request->input('date', Carbon::today()->format('Y-m-d'));
     $dayappointments =DB::table('appointments as a')
     ->join('patients as p', 'a.client_id', '=', 'p.id')
@@ -109,7 +113,7 @@ class HomeComtroller extends Controller
         'a.start_time as appointment_date',
         'd.last_name as doctor_last_name'
     )
-    ->paginate(10); 
+    ->paginate(10);
     $appointments->transform(function ( $appointments) {
         $hashedId = Hashids::encode( $appointments->patient_id);
         $appointments->hashed_id = $hashedId;
@@ -128,18 +132,17 @@ class HomeComtroller extends Controller
             'statusColors' => $statusColors
         ]);
     }
-   
 
- 
 
-  public function avalableForm($proposaldecode)
-{
-    $proposaldecode = Crypt::decrypt($proposaldecode);
 
-    return view('avalableform', ['proposaldecode' => $proposaldecode]);
-}
-    
-   
-  
-  
+
+    public function avalableForm($proposaldecode)
+    {
+        $proposaldecode = Crypt::decrypt($proposaldecode);
+        return view('avalableform', ['proposaldecode' => $proposaldecode]);
+    }
+
+
+
+
 }

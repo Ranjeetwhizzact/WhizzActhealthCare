@@ -4,7 +4,7 @@
     <div class="flex h-screen divide-x-2 divide-gray-100 ">
         <!-- Sidebar -->
         @include('common.sidenav')
-       
+
 
         <!-- Main Content -->
         <div class="main-content flex-1 ml-64 transition-all duration-300">
@@ -15,14 +15,14 @@
             <div class="p-5 bg-white">
                 @if(auth()->user()->role === 'superadmin')
                 <div class="flex justify-between  bg-white">
-                    <h5 class="text-lg capitalize font-semibold">&nbsp;patients Details</h5> 
+                    <h5 class="text-lg capitalize font-semibold">&nbsp;patients Details</h5>
                 </div>
                @endif
                <div class="py-4">
                 <div class="grid grid-cols-1">
 
                     <div class="w-full overflow-x-scroll  no-scrollbar">
-                        <form method="GET" action="{{ route('assignpatients') }}">
+                        <form method="GET" action="{{ route('medical-history') }}">
                             @csrf
                             <select name="status" onchange="this.form.submit()" class="w-48 border-2 py-1 px-2 rounded-sm">
                                 <option value="">All</option>
@@ -43,14 +43,14 @@
                                 <th class="p-2 text-start capitalize border whitespace-nowrap">Action</th>
                             </thead>
                             <tbody>
-                                @if($patients->count()) 
+                                @if($patients->count())
                                 @php
                                 $cp = $patients->currentPage();
                                 $perpage = $patients->perPage();
                                 $startNumber = ($cp-1)*$perpage;
                                 @endphp
                                 @foreach($patients as $i => $patient)
-                                    
+
                                 <tr>
                                     <td class="p-2 text-start capitalize border whitespace-nowrap">{{ $startNumber + $i + 1 }}</td>
                                     <td class="p-2 text-start capitalize border whitespace-nowrap">{{ $patient->patient_first_name }}&nbsp; {{ $patient->patient_last_name }}</td>
@@ -60,38 +60,43 @@
                                     <td class="p-2 text-start capitalize border whitespace-nowrap">{{ $patient->schedule_time}}</td>
                                     <td class="p-2 text-start capitalize border whitespace-nowrap flex gap-3 mb-0">
                                         {{-- <a href="" id="modalToggle">View</a>, --}}
-                                        <a href="{{ route('report', ['id' => $patient->hashed_id]) }}" class="bg-blue-300  px-3 py-1 rounded-full">Report</a>
-                                       <a href="{{ route('viewprescriptions', ['id' => $patient->hashed_id]) }}" class="bg-blue-300 px-3 py-1 rounded-full">
-    Add Prescription
-</a>
-                                        <a href="{{ $patient->meeting }}" class="bg-blue-300  px-3  rounded-full text-md py-1" target="_blank">Join Meeting</a>
+                                        @if ($patient->patient_status != 'canceled')
+                                            <a href="{{ route('report', ['id' => $patient->hashed_id]) }}" class="bg-blue-300  px-3 py-1 rounded-full" title="Report"><i class="ri-file-chart-line text-xl"></i></a>
+                                        @endif
+                                        @if ($patient->patient_status != 'completed' && $patient->patient_status != 'canceled')
+                                            <a href="{{ route('viewprescriptions', ['id' => $patient->hashed_id]) }}" class="bg-blue-300 px-3 py-1 rounded-full" title="Add Prescription"><i class="ri-add-line text-xl"></i></a>
+                                        @endif
+                                        @if (isset($patient->zoom_meeting_id) && $patient->zoom_meeting_id)
+                                            <a href="{{ $patient->meeting }}" class="bg-blue-300  px-3  rounded-full text-md py-1" target="_blank" title="Join Meeting"><i class="ri-slideshow-3-line text-xl"></i></a>
+                                        @endif
+                                        @if ($patient->patient_status != 'completed' && $patient->patient_status != 'canceled')
+
                                         <form method="post" action="{{ route('changestatus') }}" class="mb-0">
                                             @csrf
                                             <input type="hidden" value="{{$patient->id}}" name="id">
-                            <select name="status" onchange="this.form.submit()" class="w-32 border-2 py-1 px-2 rounded-sm">
-
-
-                                <option value="" >Updated Status</option>
-                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="rescheduled" {{ request('status') == 're-scheduled' ? 'selected' : '' }}>Re-Scheduled</option>
-                                <option value="canceled" {{ request('status') == 'canceled' ? 'selected' : '' }}>Canceled</option>
-                            </select>
-                        </form>
+                                            <select name="status" onchange="this.form.submit()" class="w-32 border-2 py-1 px-2 rounded-sm">
+                                                <option value="" >Updated Status</option>
+                                                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                                <option value="rescheduled" {{ request('status') == 're-scheduled' ? 'selected' : '' }}>Re-Scheduled</option>
+                                                <option value="canceled" {{ request('status') == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                                            </select>
+                                        </form>
+                                        @endif
                                         {{-- <a href="">Edit</a> --}}
                                     </td>
                                 </tr>
                                 @endforeach
                                 @endif
-                              </tbody> 
+                              </tbody>
                         </table>
                         <div class="flex justify-end">
 
                             <div class="mt-5 ">
-    
+
                                 @if($patients->onFirstPage())
                                 <span class="text-gray-500 px-4 py-1 text-sm bg-gray-200 rounded">Previous</span>
                                 @else
-                                <a href="{{ $patients->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}" 
+                                <a href="{{ $patients->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                     class="px-4 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
                                      Previous
                                  </a>
@@ -99,9 +104,9 @@
                              <span class="text-gray-700">
                                 Page {{ $patients->currentPage() }} of {{ $patients->lastPage() }}
                             </span>
-                    
+
                             @if ($patients->hasMorePages())
-                                <a href="{{ $patients->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}" 
+                                <a href="{{ $patients->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                    class="px-4 py-1 bg-red-500 text-sm text-white rounded hover:bg-red-600">
                                     Next
                                 </a>
@@ -118,7 +123,7 @@
         </div>
     </div>
     <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
-  
+
     <!-- Modal Content -->
     <div id="modalContent" class="fixed inset-0 flex items-center justify-center p-4 hidden transform scale-75 opacity-0 modal-transition">
       <div class="relative w-full max-w-md px-3 py-4 bg-white rounded-xl shadow-xl divide-y">
@@ -127,13 +132,13 @@
 
             <div class="grid grid-cols-7 gap-3 p-3">
                 <div class="col-span-7 md:col-span-1">
-    
+
                     <div class="w-12 h-12 rounded-full ">
                         <img src="assests\img\avatar.png" alt="" srcset="" class="rounded-full w-full h-full">
                     </div>
                 </div>
                 <div  class="col-span-7 md:col-span-6">
-    
+
                     <div class="flex justify-between ">
                         <div >
                             <h5 class="text-sm md:text-base font-semibold capitalize">Anjali Sharma</h5>
@@ -183,7 +188,7 @@
 
                     <div class="w-14 flex relative h-14">
                         <div class="w-14 h-14 rounded-full  me-0 absolute start-0 z-10"><img src="assests\img\doctor.png" alt="" srcset="" class="w-full h-full rounded-full"></div>
-                        
+
                     </div>
                 </div>
                 <div class="col-span-5">
@@ -196,7 +201,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class=" flex justify-end absolute top-0 end-0">
           <button id="closeModal" class="px-4 py-2  rounded text-lg"><i class="ri-close-fill"></i></button>
         </div>

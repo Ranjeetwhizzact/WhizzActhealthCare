@@ -4,7 +4,7 @@
        <div class="">
 
            <div class="text-xs text-gray-400 capitalize">
-               Good morning
+               Welcome Back
            </div>
            <div class="text-base font-medium  capitalize">
               {{ Auth::user()->name }}
@@ -12,7 +12,7 @@
        </div>
     </div>
     <div class="flex gap-4">
-      
+
        <div class="hidden">
            <div class="w-10 h-10 flex justify-center items-center border-2 border-gray-100 rounded-full text-lg dropdown-button"><i class="ri-settings-5-line"></i></div>
            <div class="dropdown-menu hidden absolute mt-2 w-48 end-0 bg-white border border-gray-200 rounded-lg shadow-lg">
