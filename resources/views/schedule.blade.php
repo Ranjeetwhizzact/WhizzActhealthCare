@@ -88,7 +88,7 @@
                                   <div class="col-span-2" @if($patient) hidden @endif>
 
                                     <label for="patients-search" class="block text-gray-700 font-medium mb-2 text-sm">
-                                        Proposal Number / Name / Email / Phone
+                                  Contact number
                                     </label>
                                     <input
                                         type="text"

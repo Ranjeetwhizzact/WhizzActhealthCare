@@ -257,17 +257,7 @@ public function searchpatients(Request $request)
         ->take(10) // limit results for autocomplete
         ->get();
 
-        $patients = Patient::select('id', 'first_name', 'last_name', 'proposal_number', 'email', 'phone', 'providedate')
-            ->where(function ($q) use ($query) {
-                $q->orWhere('proposal_number', 'LIKE', "%{$query}%")
-                ->orWhere('first_name', 'LIKE', "%{$query}%")
-                ->orWhere('last_name', 'LIKE', "%{$query}%")
-                ->orWhere('email', 'LIKE', "%{$query}%")
-                ->orWhere('phone', 'LIKE', "%{$query}%");
-            })
-            ->orderBy('id', 'desc')
-            ->limit(10)
-            ->get();
+        
 
         return response()->json($patients);
     }
