@@ -171,10 +171,13 @@ class AppointmentController extends Controller
             $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
             Log::info('Zoom meeting created', ['zoomMeeting' => $zoomMeeting]);
 
-            if (isset($zoomMeeting['error'])) {
-                Log::error('Zoom meeting creation failed', ['error' => $zoomMeeting['error']]);
-                return response()->json(['error' => $zoomMeeting['error']], 500);
-            }
+        // Create Zoom meeting
+     if ($request->appointment_type == "online") {
+        $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
+    }
+
+       
+        Log::info('Zoom meeting created', ['zoomMeeting' => $zoomMeeting]);
 
             // Create or update appointment
             $appointment = Appointment::where('client_id', $client->id)->first();
@@ -190,13 +193,20 @@ class AppointmentController extends Controller
                 'doctor_access_key' => Str::random(10),
             ];
 
-            if ($appointment) {
-                Log::info('Updating existing appointment', ['appointment_id' => $appointment->id]);
-                $appointment->update($appointmentData);
-            } else {
-                Log::info('Creating new appointment');
-                $appointment = Appointment::create(array_merge($appointmentData, ['client_id' => $client->id]));
-            }
+        // Create or update appointment
+        $appointment = Appointment::where('client_id', $client->id)->first();
+        $appointmentData = [
+            'doctor_id' => $doctor->user_id,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'appointment_type'=>$request->$appointment_type,
+            'zoom_meeting_id' => $zoomMeeting['id'],
+            'zoom_join_url' => $zoomMeeting['join_url'],
+            'zoom_start_url' => $zoomMeeting['start_url'],
+            'zoom_passcode' => $zoomMeeting['password'],
+            'status' => 'scheduled',
+            'doctor_access_key' => Str::random(10),
+        ];
 
             $client->status = 'scheduled';
             $client->save();
