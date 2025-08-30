@@ -12,7 +12,7 @@
 
             <!-- Table Section -->
             <div class="p-5 bg-white">
-            
+
                 <form action="{{ isset($doctor) ? route('update.doctor', $doctor->id) : route('store.doctor') }}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
                     @csrf
                     <div class="grid md:grid-cols-4 lg:grid-cols-5 gap-4 divide-x">
@@ -21,9 +21,9 @@
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Profile Image</label>
                                     <label for="imag">
-                                        <img id="imagePreview"  
-                                            src="{{ isset($doctor->image) ? asset($doctor->image) : asset('assests/img/avatar.png') }}" 
-                                            alt="Profile Image" 
+                                        <img id="imagePreview"
+                                            src="{{ isset($doctor->image) ? asset($doctor->image) : asset('assests/img/avatar.png') }}"
+                                            alt="Profile Image"
                                             class="w-32 h-32 object-cover mb-2 rounded">
                                     </label>
                                     <input type="file" name="image" accept="image/*" id="imag"
@@ -38,9 +38,9 @@
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Signature</label>
                                     <label for="signature">
-                                        <img id="signaturePreview" 
-                                           src="{{ isset($doctor->signature) && $doctor->signature ? asset($doctor->signature) : asset('assests/img/sine.png') }}" 
-                                            alt="Signature" 
+                                        <img id="signaturePreview"
+                                           src="{{ isset($doctor->signature) && $doctor->signature ? asset($doctor->signature) : asset('assests/img/sine.png') }}"
+                                            alt="Signature"
                                             class="w-32 h-16 object-contain mb-2 border rounded">
                                     </label>
                                     <input type="file" name="signature" accept="image/*" id="signature"
@@ -68,7 +68,7 @@
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                               
+
 
                                 <!-- Personal Email -->
                                 <div class="col-span-2 lg:col-span-1">
@@ -81,8 +81,8 @@
 
                                 <!-- Company Email -->
                                 <div class="col-span-2 lg:col-span-1">
-                                    <label class="block text-gray-700 font-medium mb-2 text-sm">Company Email ID</label>
-                                    <input type="email" name="username" value="{{ old('username', $user->email ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="example@email.com" >
+                                    <label class="block text-gray-700 font-medium mb-2 text-sm">Official Email ID</label>
+                                    <input type="email" name="username" value="{{ old('username', $user->email ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="example@whizzcare.com" >
                                     @error('username')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
@@ -98,7 +98,7 @@
                                 </div>
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Phone</label>
-                                    <input type="text" name="phone" value="{{ old('phone', $doctor->phone ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="+123456789">
+                                    <input type="text" name="phone" value="{{ old('phone', $doctor->phone ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="+91 123456789">
                                     @error('phone')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
@@ -125,7 +125,7 @@
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Reference Number</label>
                                     <input type="text" name="reference_number" value="{{isset($doctor->reference_number)?$doctor->reference_number:''}}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Reference Number" >
                                 </div>
-                           
+
                                <div class="col-span-2 lg:col-span-1">
                                  <label class="block text-gray-700 font-medium mb-2 text-sm">Degree</label>
                                     <input type="file" name="degree" class="w-full border border-gray-300 p-2 rounded-lg">
@@ -135,37 +135,37 @@
                                 </div>
                                       <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Year of Experince </label>
-                                    <input type="text" name="year_of_experince" value="{{ old('year_of_experince', $doctor->year_of_experince ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
+                                    <input type="number" name="year_of_experince" value="{{ old('year_of_experince', $doctor->year_of_experince ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
                                     @error('year_of_experince')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Department </label>
-                                    <input type="text" name="department" value="{{ old('offline_fees', $doctor->offline_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter Here .." >
+                                    <input type="text" name="department" value="{{ old('department', $doctor->department ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter Here .." >
                                     @error('department')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
-                                
+
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Online Consultation fees </label>
-                                    <input type="text" name="online_fees" value="{{ old('online_fees', $doctor->online_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
+                                    <input type="number" name="online_fees" value="{{ old('online_fees', $doctor->online_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
                                     @error('online_fees')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Offline Consultation fees </label>
-                                    <input type="text" name="offline_fees" value="{{ old('offline_fees', $doctor->offline_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter Here .." >
+                                    <input type="number" name="offline_fees" value="{{ old('offline_fees', $doctor->offline_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter Here .." >
                                     @error('offline_fees')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-span-4 md:col-span-2">
-                                    <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm ">Associated Hospitals</label>
-                                    <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="5" name="associated_hospitals" value="" placeholder="Enter your Associated Hospitals" >{{isset($patient->associated_hospitals)?$patient->associated_hospitals:''}}</textarea>
-                                                                        @error('associated_hospitals')
+                                    <label class="block text-gray-700 font-medium mb-2 text-sm ">Associated Hospitals</label>
+                                    <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="3" name="associated_hospitals" value="" placeholder="Enter associated hospitals with common comma(,) separation" >{{isset($patient->associated_hospitals)?$patient->associated_hospitals:''}}</textarea>
+                                    @error('associated_hospitals')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -206,6 +206,22 @@
 @endsection
 
 @section('script')
+
+<script>
+  $(function() {
+    $('#yourFormId').on('submit', function(e) {
+      const phone = $('#phone').val().trim();
+      const phonePattern = /^\+\d{1,3}\s\d{9,10}$/;
+      if (!phonePattern.test(phone)) {
+        e.preventDefault();
+        alert("Please enter a valid phone number in this format: +91123456789");
+        $('#phone').focus();
+        return false;
+      }
+      return true;
+    });
+  });
+</script>
 <script>
     $(function () {
         $("#users-search").autocomplete({
