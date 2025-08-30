@@ -85,7 +85,7 @@
                             <div class="col-span-2 ">
                                 <h5 class="ps-3 font-medium my-2 "> Schedule Call {{ isset($patient) ? 'For '. $patient->first_name . ' ' . $patient->last_name : '' }}</h5>
                                 <input type="hidden" name="email"  id="clientemail" class="w-full border border-gray-300 p-2 rounded-lg">
-                                  <div class="col-span-2" @if($patient) hidden @endif>
+                                  <div class="col-span-2 px-2" @if($patient) hidden @endif>
 
                                     <label for="patients-search" class="block text-gray-700 font-medium mb-2 text-sm">
                                   Contact number

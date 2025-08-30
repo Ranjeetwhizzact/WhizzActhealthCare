@@ -106,84 +106,110 @@ class AppointmentController extends Controller
 
     }
 
-    public function scheduleCall(Request $request)
-    {
-        try {
-            if ($request->filled('date')) {
-                $inputDate = $request->date;
-                $formattedDate = null;
-                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $inputDate)) {
-                    $formattedDate = $inputDate;
-                } elseif (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $inputDate)) {
-                    try {
-                        $formattedDate = Carbon::createFromFormat('m/d/Y', $inputDate)->format('Y-m-d');
-                    } catch (\Exception $e) {
-                        Log::error('Date format conversion failed', ['input_date' => $inputDate, 'exception' => $e->getMessage()]);
-                        return back()->with('error', 'Invalid date format. Please use MM/DD/YYYY or YYYY-MM-DD.');
-                    }
-                } else {
-                    Log::error('Unrecognized date format', ['input_date' => $inputDate]);
+public function scheduleCall(Request $request)
+{
+    Log::info('scheduleCall initiated', ['request' => $request->all()]);
+
+    try {
+        // Handle dynamic date format parsing
+        if ($request->filled('date')) {
+            $inputDate = $request->date;
+            $formattedDate = null;
+
+            // Accept YYYY-MM-DD or MM/DD/YYYY
+            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $inputDate)) {
+                $formattedDate = $inputDate;
+            } elseif (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $inputDate)) {
+                try {
+                    $formattedDate = Carbon::createFromFormat('m/d/Y', $inputDate)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    Log::error('Date format conversion failed', ['input_date' => $inputDate, 'exception' => $e->getMessage()]);
                     return back()->with('error', 'Invalid date format. Please use MM/DD/YYYY or YYYY-MM-DD.');
                 }
-
-                $request->merge(['date' => $formattedDate]);
             } else {
-                return back()->with('error', 'Date is required.');
-            }
-            try {
-                $request->validate([
-                    'client_id' => 'required|exists:patients,id',
-                    'doctor_id' => 'required|exists:doctors,user_id', // FIXED LINE
-                    'date' => 'required|date',
-                    'time' => 'required',
-                ]);
-            } catch (\Illuminate\Validation\ValidationException $e) {
-                Log::error('Validation failed', ['errors' => $e->errors()]);
-                return back()->withErrors($e->errors());
+                Log::error('Unrecognized date format', ['input_date' => $inputDate]);
+                return back()->with('error', 'Invalid date format. Please use MM/DD/YYYY or YYYY-MM-DD.');
             }
 
-            $startTime = $request->date . ' ' . $request->time . ':00';
-            $endTime = date('Y-m-d H:i:s', strtotime($startTime . ' +30 minutes'));
+            $request->merge(['date' => $formattedDate]);
+        } else {
+            return back()->with('error', 'Date is required.');
+        }
 
-            $doctor = Doctor::where('user_id', $request->doctor_id)->firstOrFail();
-            $client = Patient::findOrFail($request->client_id);
+        // Validate input
+        try {
+            $request->validate([
+                'client_id' => 'required|exists:patients,id',
+                'doctor_id' => 'required|exists:doctors,user_id',
+                'date' => 'required|date',
+                'time' => 'required',
+                'appointment_type' => 'required',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation failed', ['errors' => $e->errors()]);
+            return back()->withErrors($e->errors());
+        }
+
+        $startTime = $request->date . ' ' . $request->time . ':00';
+        $endTime = date('Y-m-d H:i:s', strtotime($startTime . ' +30 minutes'));
+
+        Log::info('Start and end time computed', ['start' => $startTime, 'end' => $endTime]);
+
+        $doctor = Doctor::where('user_id', $request->doctor_id)->firstOrFail();
+        $client = Patient::findOrFail($request->client_id);
+
+        Log::info('Doctor and client fetched', ['doctor_id' => $doctor->user_id, 'client_id' => $client->id]);
+
+        // Create Zoom meeting only for online appointments
+        $zoomMeeting = null;
+        if ($request->appointment_type == "online") {
             $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
-            if ($request->appointment_type == "online") {
-                $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
-            }
-            $appointment = Appointment::where('client_id', $client->id)->first();
-            $appointmentData = [
-                'doctor_id' => $doctor->user_id,
-                'start_time' => $startTime,
-                'end_time' => $endTime,
-                'zoom_meeting_id' => $zoomMeeting['id'],
-                'zoom_join_url' => $zoomMeeting['join_url'],
-                'zoom_start_url' => $zoomMeeting['start_url'],
-                'zoom_passcode' => $zoomMeeting['password'],
-                'status' => 'scheduled',
-                'doctor_access_key' => Str::random(10),
-            ];
+            Log::info('Zoom meeting created', ['zoomMeeting' => $zoomMeeting]);
+        }
 
-        // Create or update appointment
-        $appointment = Appointment::where('client_id', $client->id)->first();
+        // Prepare appointment data
         $appointmentData = [
             'doctor_id' => $doctor->user_id,
+            'client_id' => $client->id,
             'start_time' => $startTime,
             'end_time' => $endTime,
-            'appointment_type'=>$request->$appointment_type,
-            'zoom_meeting_id' => $zoomMeeting['id'],
-            'zoom_join_url' => $zoomMeeting['join_url'],
-            'zoom_start_url' => $zoomMeeting['start_url'],
-            'zoom_passcode' => $zoomMeeting['password'],
+            'appointment_type' => $request->appointment_type,
             'status' => 'scheduled',
             'doctor_access_key' => Str::random(10),
         ];
 
-            $client->status = 'scheduled';
-            $client->save();
+        // Add Zoom data only for online appointments
+        if ($request->appointment_type == "online" && $zoomMeeting) {
+            $appointmentData['zoom_meeting_id'] = $zoomMeeting['id'];
+            $appointmentData['zoom_join_url'] = $zoomMeeting['join_url'];
+            $appointmentData['zoom_start_url'] = $zoomMeeting['start_url'];
+            $appointmentData['zoom_passcode'] = $zoomMeeting['password'];
+        }
 
-            $whizzcareDomain = env('APP_URL');
-            $meetingLink = "{$whizzcareDomain}/join-meeting/{$zoomMeeting['id']}";
+        // Create or update appointment
+        $appointment = Appointment::where('client_id', $client->id)
+            ->where('status', '!=', 'completed')
+            ->first();
+
+        if ($appointment) {
+            // Update existing appointment
+            $appointment->update($appointmentData);
+            Log::info('Appointment updated', ['appointment_id' => $appointment->id]);
+        } else {
+            // Create new appointment
+            $appointment = Appointment::create($appointmentData);
+            Log::info('Appointment created', ['appointment_id' => $appointment->id]);
+        }
+
+        // Update client status
+        $client->status = 'scheduled';
+        $client->save();
+        Log::info('Client status updated');
+
+        // Send notifications only for online appointments
+        if ($request->appointment_type == "online") {
+            $honestdomain = env('APP_URL');
+            $meetingLink = "{$honestdomain}/join-meeting/{$zoomMeeting['id']}";
             $mobile = ltrim($client->phone, '0');
             $assign_patient_name = $client->first_name . ' ' . $client->last_name;
 
@@ -240,6 +266,15 @@ class AppointmentController extends Controller
             Log::info('SMS response', ['response' => $smsResponse->body()]);
 
             if ($emailResponse->successful() && $smsResponse->successful()) {
+
+                 if ($appointment) {
+                    $appointment->update($appointmentData);
+                    Log::info('Appointment updated', ['appointment_id' => $appointment->id]);
+                    } else {        
+                        $appointment = Appointment::create($appointmentData);
+                        Log::info('Appointment created', ['appointment_id' => $appointment->id]);
+                    }
+
                 Log::info('Both email and SMS sent successfully.');
                 return back()->with('success', 'The video medical examination has been scheduled, and notifications were sent via SMS and email.');
             } else {
@@ -249,15 +284,19 @@ class AppointmentController extends Controller
                 ]);
                 return back()->with('error', 'Appointment saved, but failed to send one or more notifications.');
             }
-
-        } catch (\Throwable $e) {
-            Log::error('Exception in scheduleCall', [
-                'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return back()->with('error', 'Something went wrong. Please try again later.');
+        } else {
+            // For offline appointments
+            return back()->with('success', 'Appointment has been scheduled successfully.');
         }
+
+    } catch (\Throwable $e) {
+        Log::error('Exception in scheduleCall', [
+            'exception' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return back()->with('error', 'Something went wrong. Please try again later.');
     }
+}
 
     public function joinMeeting(Request $request, $appointmentId)
     {

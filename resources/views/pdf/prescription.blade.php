@@ -43,7 +43,6 @@
             color: #555;
             margin-top: 5px;
         }
-
         /* SECTIONS */
         .section {
             background: #fff;
