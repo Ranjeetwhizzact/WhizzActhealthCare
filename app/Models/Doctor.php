@@ -16,9 +16,11 @@ class Doctor extends Model
         'email',
         'phone',
         'gender',
-      'doctor_img',
+      'image',
         'availabel_days',
         'available_time',
+        'year_of_experince',
+        'associated_hospitals',
         'address',
         'status',
       

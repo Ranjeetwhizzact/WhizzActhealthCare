@@ -66,23 +66,30 @@ class DoctorController extends Controller
 public function storedoctor(Request $request)
 {
     // Validate input
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email|unique:doctors,email|unique:users,email',
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'phone' => 'required|string|max:15',
-        'gender' => 'required|string',
-        'education' => 'required|string|max:255',
-        'available_days' => 'required|array',
-        'password'=> 'required|min:6',
-        'online_fees'=> 'required|numeric|min:0',
-        'offline_fees'=> 'required|numeric|min:0',
-        'department'=> 'required|string',
-        'associated_hospitals'=>'required|string',
-        'year_of_experince'=>'required|numeric|min:0',
-        'image' => 'required|image|mimes:jpeg,png,jpg|max:200',
-        'signature' => 'required|image|mimes:png,jpg,jpeg|max:100',
-    ]);
+ $validator = Validator::make($request->all(), [
+    'email' => 'required|email|unique:doctors,email|unique:users,email',
+    'first_name' => ['required','regex:/^[A-Za-z\s]+$/','max:255'],
+    'last_name' => ['required','regex:/^[A-Za-z\s]+$/','max:255'],
+    'phone' => 'required|numeric|max:10',
+    'gender' => 'required|string',
+    'education' => ['required','regex:/^[A-Za-z\s]+$/','max:255'],
+    'available_days' => 'required|array',
+    'password'=> 'required|min:6',
+    'online_fees'=> 'required|numeric|min:0',
+    'offline_fees'=> 'required|numeric|min:0',
+    'department'=> ['required','regex:/^[A-Za-z\s]+$/'],
+    'associated_hospitals'=> ['required','regex:/^[A-Za-z\s]+$/'],
+    'year_of_experince'=>'required|numeric|min:0',
+    'image' => 'required|image|mimes:jpeg,png,jpg|max:200',
+    'signature' => 'required|image|mimes:png,jpg,jpeg|max:100',
+], [
+    'first_name.regex' => 'The first name may only contain letters and spaces.',
+    'last_name.regex' => 'The last name may only contain letters and spaces.',
+    'education.regex' => 'The education field may only contain letters and spaces.',
+    'department.regex' => 'The department may only contain letters and spaces.',
+    'associated_hospitals.regex' => 'The associated hospitals may only contain letters and spaces.',
+]);
+
 
     if ($validator->fails()) {
         return redirect()->back()->withErrors($validator)->withInput();
