@@ -43,28 +43,20 @@ class AppointmentController extends Controller
 
         $selectDate = $request->date; // Format: YYYY-MM-DD
         $selectTime = $request->time; // Format: HH:MM
-
         // Convert date to weekday
         $weekday = strtolower(Carbon::parse($selectDate)->format('l'));
-
         // Fetch all doctors and filter based on availability
         $doctors = Doctor::all()->filter(function ($doctor) use ($weekday, $selectTime) {
             $availableDays = json_decode($doctor->available_days, true);
-
             if (!isset($availableDays[$weekday])) {
-
                 return false;
             }
-
-            $startTime = Carbon::parse($availableDays[$weekday]['start_time'])->format('H:i');
-            $endTime = Carbon::parse($availableDays[$weekday]['end_time'])->format('H:i');
-
+            $startTime = Carbon::parse($availableDays[$weekday]['start'])->format('H:i');
+            $endTime = Carbon::parse($availableDays[$weekday]['end'])->format('H:i');
             // Check if requested time is within the available time range
             if ($selectTime < $startTime || $selectTime > $endTime) {
-
                 return false;
             }
-
             return true;
         });
 
@@ -234,7 +226,7 @@ public function scheduleCall(Request $request)
                     ]],
                     'cc' => [[
                         'name' => 'WhizzCare',
-                        'email' => 'honesthealthcare3@gmail.com'
+                        'email' => 'no_reply@whizzact.com'
                     ]],
                     'variables' => [
                         'VAR1' => $assign_patient_name,
@@ -245,17 +237,15 @@ public function scheduleCall(Request $request)
                 ]],
                 'from' => [
                     'name' => 'WhizzCare',
-                    'email' => 'honesthealthcare@email.whizzactsolutions.com'
+                    'email' => 'whizzcare@email.whizzactsolutions.com'
                 ],
                 'domain' => 'email.whizzactsolutions.com',
                 'reply_to' => [[
-                    'email' => 'honesthealthcare3@gmail.com'
+                    'email' => 'no_reply@whizzact.com'
                 ]],
                 'attachments' => [],
                 'template_id' => 'honest_availability_submitted_confirmation'
             ]);
-
-            Log::info('Email response', ['response' => $emailResponse->body()]);
 
             // Send SMS
             $smsResponse = Http::withHeaders([

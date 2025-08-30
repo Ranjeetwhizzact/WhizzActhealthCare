@@ -91,7 +91,7 @@
                                 <!-- Password -->
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Password</label>
-                                    <input type="password" name="password" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Password" required>
+                                    <input type="password" name="password" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Password">
                                     @error('password')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
@@ -135,7 +135,7 @@
                                 </div>
                                       <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Year of Experince </label>
-                                    <input type="text" name="year_of_experince" value="{{ old('online_fees', $doctor->online_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
+                                    <input type="text" name="year_of_experince" value="{{ old('year_of_experince', $doctor->year_of_experince ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
                                     @error('year_of_experince')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
@@ -151,20 +151,23 @@
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Online Consultation fees </label>
                                     <input type="text" name="online_fees" value="{{ old('online_fees', $doctor->online_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter here .." >
-                                    @error('last_name')
+                                    @error('online_fees')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-span-2 lg:col-span-1">
                                     <label class="block text-gray-700 font-medium mb-2 text-sm">Offline Consultation fees </label>
                                     <input type="text" name="offline_fees" value="{{ old('offline_fees', $doctor->offline_fees ?? '') }}" class="w-full border border-gray-300 p-2 rounded-lg" placeholder="Enter Here .." >
-                                    @error('last_name')
+                                    @error('offline_fees')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
                                 <div class="col-span-4 md:col-span-2">
                                     <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm ">Associated Hospitals</label>
-                                    <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="5" name="associated_hospitals" value="" placeholder="Enter your Associated Hospitals" required>{{isset($patient->associated_hospitals)?$patient->associated_hospitals:''}}</textarea>
+                                    <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="5" name="associated_hospitals" value="" placeholder="Enter your Associated Hospitals" >{{isset($patient->associated_hospitals)?$patient->associated_hospitals:''}}</textarea>
+                                                                        @error('associated_hospitals')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
 
