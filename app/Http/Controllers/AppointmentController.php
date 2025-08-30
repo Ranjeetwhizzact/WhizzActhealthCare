@@ -43,28 +43,20 @@ class AppointmentController extends Controller
 
         $selectDate = $request->date; // Format: YYYY-MM-DD
         $selectTime = $request->time; // Format: HH:MM
-
         // Convert date to weekday
         $weekday = strtolower(Carbon::parse($selectDate)->format('l'));
-
         // Fetch all doctors and filter based on availability
         $doctors = Doctor::all()->filter(function ($doctor) use ($weekday, $selectTime) {
             $availableDays = json_decode($doctor->available_days, true);
-
             if (!isset($availableDays[$weekday])) {
-
                 return false;
             }
-
-            $startTime = Carbon::parse($availableDays[$weekday]['start_time'])->format('H:i');
-            $endTime = Carbon::parse($availableDays[$weekday]['end_time'])->format('H:i');
-
+            $startTime = Carbon::parse($availableDays[$weekday]['start'])->format('H:i');
+            $endTime = Carbon::parse($availableDays[$weekday]['end'])->format('H:i');
             // Check if requested time is within the available time range
             if ($selectTime < $startTime || $selectTime > $endTime) {
-
                 return false;
             }
-
             return true;
         });
 
@@ -116,15 +108,10 @@ class AppointmentController extends Controller
 
     public function scheduleCall(Request $request)
     {
-        Log::info('scheduleCall initiated', ['request' => $request->all()]);
-
         try {
-            // Handle dynamic date format parsing
             if ($request->filled('date')) {
                 $inputDate = $request->date;
                 $formattedDate = null;
-
-                // Accept YYYY-MM-DD or MM/DD/YYYY
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $inputDate)) {
                     $formattedDate = $inputDate;
                 } elseif (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $inputDate)) {
@@ -143,8 +130,6 @@ class AppointmentController extends Controller
             } else {
                 return back()->with('error', 'Date is required.');
             }
-
-            // Validate input
             try {
                 $request->validate([
                     'client_id' => 'required|exists:patients,id',
@@ -160,26 +145,12 @@ class AppointmentController extends Controller
             $startTime = $request->date . ' ' . $request->time . ':00';
             $endTime = date('Y-m-d H:i:s', strtotime($startTime . ' +30 minutes'));
 
-            Log::info('Start and end time computed', ['start' => $startTime, 'end' => $endTime]);
-
             $doctor = Doctor::where('user_id', $request->doctor_id)->firstOrFail();
             $client = Patient::findOrFail($request->client_id);
-
-            Log::info('Doctor and client fetched', ['doctor_id' => $doctor->user_id, 'client_id' => $client->id]);
-
-            // Create Zoom meeting
             $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
-            Log::info('Zoom meeting created', ['zoomMeeting' => $zoomMeeting]);
-
-        // Create Zoom meeting
-     if ($request->appointment_type == "online") {
-        $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
-    }
-
-       
-        Log::info('Zoom meeting created', ['zoomMeeting' => $zoomMeeting]);
-
-            // Create or update appointment
+            if ($request->appointment_type == "online") {
+                $zoomMeeting = $this->zoomService->createMeeting($startTime, $doctor->email, $client->email);
+            }
             $appointment = Appointment::where('client_id', $client->id)->first();
             $appointmentData = [
                 'doctor_id' => $doctor->user_id,
@@ -210,10 +181,9 @@ class AppointmentController extends Controller
 
             $client->status = 'scheduled';
             $client->save();
-            Log::info('Client status updated');
 
-            $honestdomain = env('APP_URL');
-            $meetingLink = "{$honestdomain}/join-meeting/{$zoomMeeting['id']}";
+            $whizzcareDomain = env('APP_URL');
+            $meetingLink = "{$whizzcareDomain}/join-meeting/{$zoomMeeting['id']}";
             $mobile = ltrim($client->phone, '0');
             $assign_patient_name = $client->first_name . ' ' . $client->last_name;
 
@@ -230,7 +200,7 @@ class AppointmentController extends Controller
                     ]],
                     'cc' => [[
                         'name' => 'WhizzCare',
-                        'email' => 'honesthealthcare3@gmail.com'
+                        'email' => 'no_reply@whizzact.com'
                     ]],
                     'variables' => [
                         'VAR1' => $assign_patient_name,
@@ -241,17 +211,15 @@ class AppointmentController extends Controller
                 ]],
                 'from' => [
                     'name' => 'WhizzCare',
-                    'email' => 'honesthealthcare@email.whizzactsolutions.com'
+                    'email' => 'whizzcare@email.whizzactsolutions.com'
                 ],
                 'domain' => 'email.whizzactsolutions.com',
                 'reply_to' => [[
-                    'email' => 'honesthealthcare3@gmail.com'
+                    'email' => 'no_reply@whizzact.com'
                 ]],
                 'attachments' => [],
                 'template_id' => 'honest_availability_submitted_confirmation'
             ]);
-
-            Log::info('Email response', ['response' => $emailResponse->body()]);
 
             // Send SMS
             $smsResponse = Http::withHeaders([

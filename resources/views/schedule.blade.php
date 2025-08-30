@@ -20,7 +20,7 @@
                     </div>
                 @endif
 
-         <form action="{{url('/schedule')}}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+         <form action="{{url('/schedule/create')}}" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
             <div class="grid grid-cols-1 gap-4 ">
                 @csrf
                 <div >
@@ -164,20 +164,20 @@
 
                             </div>
                             <div class="col-span-2 px-2">
-    <label for="appointment-type" class="block text-gray-700 font-medium mb-2 text-sm">
-        Appointment Type
-    </label>
-    <select 
-        id="appointment-type" 
-        name="appointment_type" 
-        class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        required
-    >
-        <option value="" disabled selected>Select Appointment Type</option>
-        <option value="online">Online</option>
-        <option value="offline">Offline / In-person</option>
-    </select>
-</div>
+                                <label for="appointment-type" class="block text-gray-700 font-medium mb-2 text-sm">
+                                    Appointment Type
+                                </label>
+                                <select
+                                    id="appointment-type"
+                                    name="appointment_type"
+                                    class="w-full border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                    required
+                                >
+                                    <option value="" disabled selected>Select Appointment Type</option>
+                                    <option value="online">Online</option>
+                                    <option value="offline">Offline / In-person</option>
+                                </select>
+                            </div>
 
                             <div class="col-span-2">
 
@@ -302,7 +302,7 @@ $("#patients-search").autocomplete({
 // Customize dropdown style
 $.ui.autocomplete.prototype._renderItem = function(ul, item) {
     return $("<li>")
-        .append(` 
+        .append(`
             <div class="bg-white flex hover:bg-blue-500 hover:text-white p-4 border border-gray-200 gap-4 rounded-md cursor-pointer">
                 <div>
                     <strong class="text-sm text-gray-800">${item.data.first_name} ${item.data.last_name}</strong><br>

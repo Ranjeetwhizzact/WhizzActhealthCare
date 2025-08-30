@@ -249,17 +249,17 @@ class ScheduleController extends Controller
     public function schedule(){
         return view('schedule');
     }
-public function searchpatients(Request $request)
-{
-     $term = $request->get('term') ?? $request->get('query');
+    public function searchpatients(Request $request)
+    {
+        $term = $request->get('term') ?? $request->get('query');
 
-    $patients = Patient::where('phone', 'LIKE', "%{$term}%")
-        ->take(10) // limit results for autocomplete
-        ->get();
+        $patients = Patient::where('phone', 'LIKE', "%{$term}%")
+            ->take(10) // limit results for autocomplete
+            ->get();
 
-        
 
-        return response()->json($patients);
+
+            return response()->json($patients);
     }
 
     public function storeschedule(Request $request){

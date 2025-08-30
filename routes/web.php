@@ -63,9 +63,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/getrecording/{id}',[AppointmentController::class,'getRecording'])->name('getRecording');
 
         Route::get('/schedule', [AppointmentController::class, 'index'])->name('schedule');
-        Route::post('/schedule', [AppointmentController::class, 'scheduleCall'])->name('schedule-call');
-        Route::get('/join-meeting/{id}', [AppointmentController::class, 'joinMeeting'])
-        ->name('join.meeting');
+        Route::post('/schedule/create', [AppointmentController::class, 'scheduleCall'])->name('schedule-call.create');
+        Route::get('/join-meeting/{id}', [AppointmentController::class, 'joinMeeting'])->name('join.meeting');
 
 
         // Route::get('/viewpatient', [PatientController::class, 'viewpatient'])->name('patient');
@@ -84,9 +83,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/{id}',[ReportController::class,'report'])->name('report');
     Route::post('/changestatus',[ScheduleController::class,'changestatus'])->name('changestatus');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/category', [HomeController::class, 'getCategories'])->name('category');
+    Route::get('/service-catalog', [HomeController::class, 'getServiceCatalog'])->name('service-catalog');
 });
 Route::get('avalableform/{proposalno}', [HomeController::class, 'avalableform']);
 Route::post('customermail', [PatientController::class, 'customermail']);
 
-Route::get('/join-meeting/{id}', [AppointmentController::class, 'joinMeeting'])
-    ->name('join.meeting');
+Route::get('/join-meeting/{id}', [AppointmentController::class, 'joinMeeting'])->name('join.meeting');

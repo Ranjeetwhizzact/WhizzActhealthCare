@@ -57,18 +57,23 @@
             </a>
         </li>
 
-        {{-- <li>
-            <a href="{{url('report')}}" class="cursor-pointer {{ request()->is('report') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
-                <i class="ri-file-chart-line text-xl"></i>
-                <span class="ml-5 navtext capitalize">Report</span>
-            </a>
-        </li>  --}}
-
-
         <li>
             <a href="{{url('user') }}" class="cursor-pointer {{ request()->is('register') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
                 <i class="ri-user-add-line"></i>
                 <span class="ml-5 navtext capitalize">Users</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{url('category') }}" class="cursor-pointer {{ request()->is('category') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
+                <i class="ri-settings-2-line"></i>
+                <span class="ml-5 navtext capitalize">Service Category</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{{url('service-catalog') }}" class="cursor-pointer {{ request()->is('service-catalog') ? 'text-[#DC2626]' : 'text-[#A1A1AA]' }} flex items-center pl-3 py-2 hover:text-[#DC2626] transition-colors">
+                <i class="ri-settings-2-line"></i>
+                <span class="ml-5 navtext capitalize">Service Catalog</span>
             </a>
         </li>
         @endif
