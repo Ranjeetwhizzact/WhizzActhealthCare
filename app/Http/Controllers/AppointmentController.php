@@ -37,74 +37,85 @@ class AppointmentController extends Controller
     {
         $this->zoomService = $zoomService;
     }
+public function checkdoctor(Request $request)
+{
+    
+    $request->validate([
+        'date' => 'required|date',               
+        'time' => 'required|date_format:H:i',    
+    ]);
 
-    public function checkdoctor(Request $request){
+    $selectDate = $request->date; 
+    $selectTime = $request->time; 
 
+    $weekday = strtolower(Carbon::parse($selectDate)->format('l'));
 
-        $selectDate = $request->date; // Format: YYYY-MM-DD
-        $selectTime = $request->time; // Format: HH:MM
-        // Convert date to weekday
-        $weekday = strtolower(Carbon::parse($selectDate)->format('l'));
-        // Fetch all doctors and filter based on availability
-        $doctors = Doctor::all()->filter(function ($doctor) use ($weekday, $selectTime) {
-            $availableDays = json_decode($doctor->available_days, true);
-            if (!isset($availableDays[$weekday])) {
+    $doctors = Doctor::all()->filter(function ($doctor) use ($weekday, $selectTime) {
+        $availableDays = json_decode($doctor->available_days, true);
+
+        if (!isset($availableDays[$weekday])) {
+            return false;
+        }
+
+        // Handle both formats: "start"/"end" OR "start_time"/"end_time"
+        $dayData  = $availableDays[$weekday];
+        $startKey = $dayData['start'] ?? $dayData['start_time'] ?? null;
+        $endKey   = $dayData['end'] ?? $dayData['end_time'] ?? null;
+
+        if (!$startKey || !$endKey) {
+            return false; // timings not set
+        }
+
+        $startTime = Carbon::parse($startKey)->format('H:i');
+        $endTime   = Carbon::parse($endKey)->format('H:i');
+
+        // If requested time is outside available hours, skip doctor
+        if ($selectTime < $startTime || $selectTime > $endTime) {
+            return false;
+        }
+
+        return true;
+    });
+
+    // ✅ Filter out doctors who already have an appointment at that time
+    $availableDoctors = $doctors->filter(function ($doctor) use ($selectDate, $selectTime) {
+        $appointments = Appointment::where('doctor_id', $doctor->id)
+            ->whereDate('start_time', $selectDate)
+            ->get();
+
+        foreach ($appointments as $appointment) {
+            $startTime = Carbon::parse($appointment->start_time)->format('H:i');
+            $endTime   = Carbon::parse($appointment->end_time)->format('H:i');
+
+            Log::info('Appointment details', [
+                'doctor_id'        => $doctor->user_id,
+                'appointment_start'=> $startTime,
+                'appointment_end'  => $endTime,
+                'requested_time'   => $selectTime
+            ]);
+
+            // If requested time falls within an existing appointment, skip doctor
+            if ($selectTime >= $startTime && $selectTime < $endTime) {
                 return false;
             }
-            $startTime = Carbon::parse($availableDays[$weekday]['start'])->format('H:i');
-            $endTime = Carbon::parse($availableDays[$weekday]['end'])->format('H:i');
-            // Check if requested time is within the available time range
-            if ($selectTime < $startTime || $selectTime > $endTime) {
-                return false;
-            }
-            return true;
-        });
+        }
+
+        return true;
+    });
+
+    // ✅ Build response list
+    $doctorList = $availableDoctors->map(function ($doctor) {
+        return [
+            'first_name' => $doctor->first_name,
+            'last_name'  => $doctor->last_name,
+            'doctor_id'  => $doctor->user_id,
+        ];
+    })->values(); // ensures clean JSON array
+
+    return response()->json(['doctorList' => $doctorList], 200);
+}
 
 
-        // Filter out fully booked doctors
-        $availableDoctors = $doctors->filter(function ($doctor) use ($selectDate, $selectTime) {
-            $appointments = Appointment::where('doctor_id', $doctor->id)
-                ->whereDate('start_time', $selectDate)
-                ->get();
-
-
-            foreach ($appointments as $appointment) {
-                $startTime = Carbon::parse($appointment->start_time)->format('H:i');
-                $endTime = Carbon::parse($appointment->end_time)->format('H:i');
-
-                Log::info('Appointment details', [
-                    'doctor_id' => $doctor->user_id,
-                    'appointment_start' => $startTime,
-                    'appointment_end' => $endTime,
-                    'requested_time' => $selectTime
-                ]);
-
-                // Check if requested time falls within any existing appointment
-                if ($selectTime >= $startTime && $selectTime < $endTime) {;
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-
-        $doctorList = $availableDoctors->map(function ($doctor) {
-            return [
-                'first_name' => $doctor->first_name,
-                'last_name' => $doctor->last_name,
-                'doctor_id' => $doctor->user_id,
-            ];
-        })->values(); // Ensures a clean JSON response
-
-        // ❌ REMOVE THIS LINE (it stops execution)
-        // dd($doctorList);
-
-        return response()->json(['doctorList' => $doctorList], 200);
-
-
-
-    }
 
 public function scheduleCall(Request $request)
 {
