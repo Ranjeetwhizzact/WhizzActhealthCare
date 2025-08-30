@@ -193,7 +193,7 @@ public function downloadWord()
             'avalibledate' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
-            'proposal_number' => 'required'  // Ensure the email is provided
+              // Ensure the email is provided
         ]);
     $patient = Patient::where('proposal_number', $request->proposal_number)->first();
      $customer_name = $patient->first_name . ' ' . $patient->last_name;
@@ -210,7 +210,7 @@ public function downloadWord()
                     'to' => [
                         [
                             'name' => 'Sachin',
-                            'email' => 'honesthealthcare3@gmail.com',
+                            'email' => 'no_reply@whizzact.com',
                         ]
                     ],
 
@@ -228,12 +228,12 @@ public function downloadWord()
             ],
             'from' => [
                 'name' => 'WhizzCare',
-                'email' => 'honesthealthcare@email.whizzactsolutions.com'
+                'email' => 'whizzcare@email.whizzactsolutions.com'
             ],
             'domain' => 'email.whizzactsolutions.com',
             'reply_to' => [
                 [
-                    'email' => 'honesthealthcare3@gmail.com'
+                    'email' => 'no_reply@whizzact.com'
                 ]
             ],
             'attachments' => [],
@@ -302,6 +302,7 @@ public function storepatient(Request $request)
     $patient->blood_group = $request->blood_group;
     $patient->marital_status = $request->marital_status;
     $patient->proposal_number = $request->proposal_number;
+    $patient->health_problems = $request->health_problems;
     $patient->insurance_company_name = $request->insurance_company_name;
     $patient->insurance_company_email = $request->insurance_company_email;
     $patient->third_party_administrator = $request->third_party_administrator;
@@ -331,7 +332,7 @@ public function storepatient(Request $request)
             ]],
             'cc' => [[
                 'name' => 'WhizzCare',
-                'email' => 'honesthealthcare3@gmail.com'
+                'email' => 'no_reply@whizzact.com'
             ]],
             'variables' => [
                 'VAR1' => $request->first_name,
@@ -342,11 +343,11 @@ public function storepatient(Request $request)
         ]],
         'from' => [
             'name' => 'WhizzCare',
-            'email' => 'honesthealthcare@email.whizzactsolutions.com'
+            'email' => 'whizzcare@email.whizzactsolutions.com'
         ],
         'domain' => 'email.whizzactsolutions.com',
         'reply_to' => [[
-            'email' => 'honesthealthcare3@gmail.com'
+            'email' => 'no_reply@whizzact.com'
         ]],
         'attachments' => [],
         'template_id' => 'honest_patient_availability_request'

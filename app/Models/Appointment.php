@@ -14,6 +14,7 @@ class Appointment extends Model
         'doctor_id',
         'start_time',
         'end_time',
+        'appointment_type',
         'zoom_meeting_id',
         'zoom_join_url',
         'zoom_start_url',

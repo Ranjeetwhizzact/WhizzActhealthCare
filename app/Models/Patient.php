@@ -23,7 +23,7 @@ class Patient extends Model
         'blood_group',
         'address',
         'status',
-      
+      'health_problems',
         'is_active',
         'created_at',
         'updated_at'

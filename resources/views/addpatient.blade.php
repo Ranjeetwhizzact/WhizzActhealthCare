@@ -68,7 +68,7 @@
                                     </div>
                                      <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
                                         <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Email</label>
-                                        <input type="email" name="email" value="{{isset($patient->email)?$patient->email:''}}" class="w-full border border-gray-300 p-2 rounded-lg emailid" placeholder="example@email.com">
+                                        <input type="email" name="email" value="{{isset($patient->email)?$patient->email:''}}" class="w-full border border-gray-300 p-2 rounded-lg emailid" placeholder="example@email.com" required>
                                     </div>
                                     <!-- Phone -->
                                      <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
@@ -76,7 +76,14 @@
                                         <input type="tel" name="phone" value="{{isset($patient->phone)?$patient->phone:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="XXXXXXXXXX" pattern="[987]\d{9}" required>
                                     </div>
                                 <!-- Blood Group -->
-                                  
+                                     <div class="col-span-4 md:col-span-2">
+                                        <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm ">Patient Address</label>
+                                        <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="5" name="address" value="" placeholder="Enter your address" required>{{isset($patient->address)?$patient->address:''}}</textarea>
+                                    </div>
+                                    <div class="col-span-4 md:col-span-2">
+                                        <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm ">Health Problems</label>
+                                        <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="5" name="health_problems" value="" placeholder="Enter your address" required>{{isset($patient->health_problems)?$patient->health_problems:''}}</textarea>
+                                    </div>
                                      <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
                                         <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Document Type</label>
                                         <select class="w-full border border-gray-300 p-2 rounded-lg" name="id_type" >
@@ -92,10 +99,7 @@
                                         <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Upload Document</label>
                                         <input type="file" name="id_document" value="{{isset($patient->id_document)?$patient->id_document:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Third Party Administrator name">
                                     </div>
-                                    <div class="col-span-4 md:col-span-2">
-                                        <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm ">Patient Address</label>
-                                        <textarea class="w-full border border-gray-300 p-2 rounded-lg" rows="5" name="address" value="" placeholder="Enter your address">{{isset($patient->address)?$patient->address:''}}</textarea>
-                                    </div>
+                                 
                                     <div class="col-span-4">
                                         <h5 class="font-bold">Insurance Company Info</h5>
                                         </div>
@@ -113,7 +117,7 @@
                                         </div>
                                          <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
                                             <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Proposal Number</label>
-                                            <input type="text" name="proposal_number" value="{{isset($patient->proposal_number)?$patient->proposal_number:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Proposal number" required>
+                                            <input type="text" name="proposal_number" value="{{isset($patient->proposal_number)?$patient->proposal_number:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Proposal number" >
                                         </div>
                                          <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
                                             <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Upload Pdf</label>

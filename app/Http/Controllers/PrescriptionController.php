@@ -60,7 +60,7 @@ public function prescriptionForm(Request $request, $hashed_id)
 }
 public function generatePrescription($id)
 {
-    // Fetch a single prescription
+    
     $prescription = Prescription::where('prescription_id', $id)->firstOrFail();
 
     // If medications are stored as JSON in DB, decode them
@@ -119,7 +119,7 @@ public function storerescription(Request $req)
     $p->patient_phone    = $client->phone;
     $p->patient_email    = $client->email;
     $p->patient_address  = $client->address;
-
+    $p->patient_id       = $client->id;
     $p->physician_name   = $doctor->first_name . " " . $doctor->last_name; // ✅ fixed (you had $client->last_name before)
     $p->physician_phone  = $doctor->phone;
     $p->physician_email  = $doctor->email;
