@@ -51,21 +51,20 @@ class ScheduleController extends Controller
                 DB::raw("CONCAT('{$domain}/join-meeting/', COALESCE(a.zoom_meeting_id, ''), '?doctor_access=', COALESCE(a.doctor_access_key, '')) as meeting")
             );
 
-        // Filter by status if provided
+       
         $status = $request->get('status', '');
         if (!empty($status)) {
             $patientsQuery->where('a.status', $status);
         }
 
-        // Filter for non-admin users
+   
         if (Auth::user()->role != 'superadmin' && Auth::user()->role != 'admin') {
             $patientsQuery->where('a.doctor_id', $userid);
         }
 
-        // Apply pagination
+
         $patients = $patientsQuery->paginate(10);
 
-        // Transform paginated collection to encode hashed ID
         $patients->getCollection()->transform(function ($patient) {
             $hashedId = Hashids::encode($patient->id);
             $patient->hashed_id = $hashedId;

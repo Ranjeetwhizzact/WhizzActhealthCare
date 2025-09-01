@@ -17,6 +17,12 @@ class Doctor extends Model
         'phone',
         'gender',
       'image',
+      'signature',
+      'education',
+      'degree',
+      'offline_fees',
+      'online_fees',
+  
         'availabel_days',
         'available_time',
         'year_of_experince',

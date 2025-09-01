@@ -26,6 +26,12 @@ class DoctorController extends Controller
         $users = User::where('email', 'LIKE', "%{$term}%")->get();
         return response()->json($users);
     }
+    public function doctorprofile($id){
+        $decoded = Hashids::decode($id);
+        $doctorId = $decoded[0];
+        $doctor = Doctor::find( $doctorId);
+        return view('doctorprofile',['doctor'=>$doctor]);
+    }
     public function doctor(Request $request)
     {
         $doctors = Doctor::orderBy('id', 'desc')->paginate(10);

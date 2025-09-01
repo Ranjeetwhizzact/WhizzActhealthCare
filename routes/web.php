@@ -33,6 +33,7 @@ use App\Http\Controllers\PrescriptionController;
 // Public Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/doctorprofile/{id}', [DoctorController::class, 'doctorprofile']);
 Route::middleware('auth')->group(function () {
 
 

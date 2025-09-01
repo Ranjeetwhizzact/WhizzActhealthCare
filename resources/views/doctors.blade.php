@@ -76,7 +76,10 @@
                                         @method('DELETE')
                                         <button type="submit" class="  text-white text-xs  py-1 mb-0"><i class="ri-delete-bin-6-line"></i></button>
                                     </form>
-                                    </div>  
+                                    </div> 
+                                    <div>
+                                        <a href="{{url('doctorprofile',$d->hashed_id)}}" class="bg-green-500 text-white px-3 py-2  rounded-full"><i class="ri-eye-fill"></i></a>
+                                        </div> 
                     </td>
                       
                     </tr>
