@@ -4,7 +4,7 @@
     <div class="flex h-screen divide-x-2 divide-gray-100 ">
         <!-- Sidebar -->
         @include('common.sidenav')
-       
+
 
         <!-- Main Content -->
         <div class="main-content flex-1 ml-64 transition-all duration-300">
@@ -42,36 +42,36 @@
     @if($lastPrescription && !empty($lastPrescription->medications))
     @foreach(json_decode($lastPrescription->medications, true) as $index => $med)
     <div class="medication-item grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2 items-center">
-        <input type="text" name="medications[{{ $loop->index }}][medication_name]" 
-               placeholder="Medication Name" 
-               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" 
+        <input type="text" name="medications[{{ $loop->index }}][medication_name]"
+               placeholder="Medication Name"
+               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
                value="{{ $med['medication_name'] ?? '' }}" required>
 
-        <input type="text" name="medications[{{ $loop->index }}][purpose]" 
-               placeholder="Purpose" 
+        <input type="text" name="medications[{{ $loop->index }}][purpose]"
+               placeholder="Purpose"
                class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
                value="{{ $med['purpose'] ?? '' }}">
 
-        <input type="text" name="medications[{{ $loop->index }}][dosage]" 
-               placeholder="Dosage" 
-               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" 
+        <input type="text" name="medications[{{ $loop->index }}][dosage]"
+               placeholder="Dosage"
+               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
                value="{{ $med['dosage'] ?? '' }}" required>
 
-        <input type="text" name="medications[{{ $loop->index }}][route]" 
-               placeholder="Route" 
-               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" 
+        <input type="text" name="medications[{{ $loop->index }}][route]"
+               placeholder="Route"
+               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
                value="{{ $med['route'] ?? '' }}">
 
-        <input type="text" name="medications[{{ $loop->index }}][frequency]" 
-               placeholder="Frequency" 
-               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" 
+        <input type="text" name="medications[{{ $loop->index }}][frequency]"
+               placeholder="Frequency"
+               class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full"
                value="{{ $med['frequency'] ?? '' }}">
 
         <div>
             <button type="button" class="remove-medication bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition mt-2 sm:mt-0">
                 <i class="ri-delete-bin-6-line"></i>
             </button>
-                           
+
         </div>
     </div>
 @endforeach
@@ -81,7 +81,7 @@
         <div class="medication-item grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2 items-center">
             <input type="text" name="medications[0][medication_name]" placeholder="Medication Name" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" required>
             <input type="text" name="medications[0][purpose]" placeholder="Purpose" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full">
-            <input type="text" name="medications[0][dosage]" placeholder="Dosage" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" required>
+            <input type="text" name="medications[0][dosage]" placeholder="Dosage" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full dosage-input" required>
             <input type="text" name="medications[0][route]" placeholder="Route" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full">
             <input type="text" name="medications[0][frequency]" placeholder="Frequency" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full">
             <div>
@@ -110,12 +110,12 @@ $(function(){
         <div class="medication-item grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-2 items-center">
             <input type="text" name="medications[${medIndex}][medication_name]" placeholder="Medication Name" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" required>
             <input type="text" name="medications[${medIndex}][purpose]" placeholder="Purpose" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full">
-            <input type="text" name="medications[${medIndex}][dosage]" placeholder="Dosage" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full" required>
+            <input type="text" name="medications[${medIndex}][dosage]" placeholder="Dosage" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full dosage-input" required>
             <input type="text" name="medications[${medIndex}][route]" placeholder="Route" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full">
             <input type="text" name="medications[${medIndex}][frequency]" placeholder="Frequency" class="p-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 w-full">
            <div>
-                                <button type="button" class="remove-medication bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition mt-2 sm:mt-0"><i class="ri-delete-bin-6-line"></i></button>
-                        </div>
+            <button type="button" class="remove-medication bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition mt-2 sm:mt-0"><i class="ri-delete-bin-6-line"></i></button>
+            </div>
         </div>`;
         $('#medications-wrapper').append(html);
         medIndex++;
@@ -135,25 +135,45 @@ $(function(){
             reader.readAsDataURL(file);
         }
     });
+
+$(document).on('input', '.dosage-input', function() {
+    let val = $(this).val().replace(/[^01]/g, '');
+    val = val.substring(0, 3);
+    if (val.length > 1) {
+        val = val.split('').join('-');
+    }
+    $(this).val(val);
 });
+
+});
+
+</script>
+<script type="text/javascript">
+    // const inputs = document.querySelectorAll('.dosage-input');
+    // inputs.forEach(input => {
+    //     input.addEventListener('input', function() {
+    //         let val = this.value.replace(/[^01]/g, '');
+    //         val = val.substring(0, 3);
+    //         if (val.length > 1) {
+    //             val = val.split('').join('-');
+    //         }
+    //         this.value = val;
+    //     });
+    // });
 </script>
 
 
 
-            
         </div>
-      
+
     </div>
 
 
 
-    
+
 </body>
 
-<script>
 
-
-</script>
 @stop
 @stop
 </html>

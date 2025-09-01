@@ -4,7 +4,7 @@
     <div class="flex h-screen divide-x-2 divide-gray-100 ">
         <!-- Sidebar -->
         @include('common.sidenav')
-
+       
 
         <!-- Main Content -->
         <div class="main-content flex-1 ml-64 transition-all duration-300">
@@ -14,13 +14,13 @@
             <!-- Table Section -->
             <div class="p-5 bg-white">
 
-
-
+              
+               
                 <form>
             <div class="grid md:grid-cols-4 lg:grid-cols-5 gap-4 divide-x">
                 @if($report)
                 @foreach ($report as $report)
-
+                    
                 <div class="md:col-span-2  ">
                     <h5 class="px-4 pt-1 pb-2 text-xl font-semibold">Report</h5>
                     <div class="bg-gray-100 rounded-lg p-4">
@@ -56,13 +56,13 @@
                             <p class="font-medium text-gray-400 text-xs">DOB</p>
                             <p class="font-semibold  text-sm">{{$report->patient_dob}}</p>
                         </div>
-
+            
                         <div class="col-span-2">
                             <p class="font-medium text-gray-400 text-xs">Address</p>
                             <p class="font-semibold  text-sm">{{$report->patient_address}}</p>
                         </div>
                     </div>
-
+                
                 </div>
                 @endforeach
                 @endif
@@ -78,9 +78,9 @@
                     </p>
                 </div>
                 <div class="mt-4">
-        <h3 class="text-lg font-semibold mb-2">Medications</h3>
+    <h3 class="text-lg font-semibold mb-2">Medications</h3>
 
-        @if(!empty($report->medications))
+    @if(!empty($report->medications))
         @php
             $medications = json_decode($report->medications, true);
         @endphp
@@ -120,16 +120,16 @@
     @endif
 </div>
 
-
+                
                     </div>
-
+                   
 
                 </form>
             </div>
             </div>
         </div>
     </div>
-
+   
 </body>
 @section('script')
 @stop

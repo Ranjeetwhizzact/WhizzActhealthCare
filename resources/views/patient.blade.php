@@ -14,8 +14,9 @@
             <!-- Table Section -->
             <div class="p-5 bg-white">
                 @if(auth()->user()->role === 'superadmin')
-                <div class="flex justify-between  bg-white">
-                    <h5 class="text-lg capitalize font-semibold">&nbsp;patients Details</h5><div class="">
+                <div class="flex justify-between flex-wrap  bg-white">
+                    <h5 class="text-lg capitalize font-semibold">&nbsp;patients Details</h5>
+                    <div class="">
                         <a href="{{ route('download.word') }}">
                             <button type="button" class="bg-blue-400 text-white mx-2 px-4 py-2 rounded-sm text-sm font-semibold ">Download Word</button></a>
                         <a href="{{url('createpatient')}}" class="d-inline-block p-2 rounded-md bg-emerald-400 text-white text-sm"><i class="ri-user-add-line "></i>&nbsp;&nbsp;Add patients</a>

@@ -24,7 +24,7 @@
             <div class="grid grid-cols-1 gap-4 ">
                 @csrf
                 <div >
-                        <div class="w-1/2 m-auto  shadow-md px-4 py-6 rounded-md grid grid-cols-2 gap-4">
+                        <div class="w-full md:w-1/3 lg:w-1/2 m-auto  shadow-md px-4 py-6 rounded-md grid grid-cols-2 gap-4">
 
 
 
