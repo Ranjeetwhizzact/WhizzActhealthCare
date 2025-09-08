@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Appointment;
+use App\Models\Prescription;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -21,6 +22,7 @@ class ScheduleController extends Controller
     public function medicalHistory(Request $request) {
         $userEmail = Auth::user()->email;
         $userid = Auth::user()->id;
+    
         $doctor = Doctor::where('email', $userEmail)->first();
         $setting = HomeController::setting();
         if($setting){

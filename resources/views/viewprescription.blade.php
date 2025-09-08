@@ -40,62 +40,42 @@
                         <table class="text-xs w-full rounded-2xl mt-4">
                             <thead class="capitalize font-medium py-3 w-full text-gray-800 bg-emerald-100">
                                 <th class="p-2 text-start ">Sr.no</th>
-                                <th class="p-2 text-start capitalize border whitespace-nowrap">name</th>
-                                <th class="p-2 text-start capitalize border whitespace-nowrap">Email </th>
-                                <th class="p-2 text-start capitalize border whitespace-nowrap">Phone</th>
-                                <th class="p-2 text-start capitalize border whitespace-nowrap">Date of Birth</th>
-                                <th class="p-2 text-start capitalize border whitespace-nowrap">Status</th>
+                                <th class="p-2 text-start capitalize border whitespace-nowrap">prescription date</th>
+                                <th class="p-2 text-start capitalize border whitespace-nowrap">patient name </th>
+                                <th class="p-2 text-start capitalize border whitespace-nowrap">patient phone</th>
+                                <th class="p-2 text-start capitalize border whitespace-nowrap">Date Of Birth</th>
+                                <th class="p-2 text-start capitalize border whitespace-nowrap">patient email</th>
+                                <th class="p-2 text-start capitalize border whitespace-nowrap">patient Age</th>
+                             
                                 <th class="p-2 text-start capitalize border whitespace-nowrap">Action</th>
                             </thead>
                             <tbody>
 
-                                @if($patients->count())
+                                @if($prescriptions->count())
                                 @php
-                                $cp = $patients->currentPage();
-                                $perpage =  $patients->perPage();
+                                $cp = $prescriptions->currentPage();
+                                $perpage =  $prescriptions->perPage();
                                 $startNumber = ($cp - 1) * $perpage;
                                 @endphp
 
-                            
-                                @foreach ($patients as $i => $p )
+
+                                @foreach ($prescriptions as $i => $p )
 
                                 <tr  >
                                     <td class="p-2 text-start capitalize border whitespace-nowrap">     {{ $startNumber + $i + 1 }}</td>
-                                    <td class="p-2 text-start capitalize border whitespace-nowrap">{{$p->first_name}}&nbsp;{{$p->last_name}}</td>
+                                    <td class="p-2 text-start capitalize border whitespace-nowrap">{{ \Carbon\Carbon::parse($p->prescription_date)->format('d M Y') }} </td>
                                     {{-- <td class="p-2 text-start capitalize border whitespace-nowrap">DR.Adity</td> --}}
-                                    <td class="p-2 text-start border whitespace-nowrap  font-medium">{{$p->email}}</td>
-                                    <td class="p-2 text-start capitalize border whitespace-nowrap">{{$p->phone}}</td>
-                                    <td class="p-2 text-start capitalize border whitespace-nowrap">{{ \Carbon\Carbon::parse($p->dob)->format('d M Y') }} </td>
-                                    {{-- <td class="p-2 text-start capitalize border whitespace-nowrap">{{$p->address}}</td> --}}
+                                    <td class="p-2 text-start border capitalize whitespace-nowrap  font-medium">{{$p->patient_name}}</td>
+                                    <td class="p-2 text-start capitalize border whitespace-nowrap">{{$p->patient_phone}}</td>
+                                    <td class="p-2 text-start capitalize border whitespace-nowrap">{{ \Carbon\Carbon::parse($p->patient_dob)->format('d M Y') }} </td>
+                                    <td class="p-2 text-start  border whitespace-nowrap">{{$p->patient_email}}</td>
+                                    <td class="p-2 text-start  border whitespace-nowrap">{{$p->patient_age}}</td>
                                     <td class="p-2 text-start capitalize border whitespace-nowrap  ">
-                                        <span class="px-2 py-1 rounded-full {{ $statusColors[$p->status] ?? '' }}">
-                                            {{ ucfirst($p->status) }}
-                                        </span>
+                                    
                                     </td>
-                                    <td class="p-2 text-start capitalize border whitespace-nowrap flex items-center gap-2">
-                                        <div>
-
-                                            <a href="{{ route('schedule', ['id' => $p->hashed_id]) }}"><button type="button" class="view-btn  px-3 py-1 rounded-full bg-green-500 text-white hover:bg-green-400" title="Book Appointment"><i class="ri-calendar-event-line"></i></button></a>
-
-                                            <a href="{{ route('viewpatient', ['id' => $p->hashed_id]) }}" class="bg-yellow-500 text-white rounded-full px-3 py-1 inline-block bg-green-500 text-white hover:bg-green-400"><i class="ri-eye-line"></i></a>
-                                        </div>
-
-                                        <div >
-
-                                            <a href="{{ route('editpatient', ['id' => $p->hashed_id]) }}" class="bg-yellow-500 text-white rounded-full px-3 py-1 inline-block hover:bg-yellow-400"><i class="ri-edit-line"></i></a>
-                                        </div>
-                                        <form action="{{ route('deletepatient', $p->hashed_id) }}" method="POST" class="mb-0" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class=" bg-red-500 text-white text-xs px-3 py-1 rounded-full mb-0"><i class="ri-delete-bin-6-line"></i></button>
-                                        </form>
-
-
-                                    </td>
+                             
                                 </tr>
                                 @endforeach
-                                @else
-                                <tr class="text-black bg-blue-100 px-3 py-2"><td colspan="7" class="py-2 px-3">Sorry no doctor found</td></tr>
                                 @endif
 
                             </tbody>
@@ -104,21 +84,21 @@
 
                             <div class="mt-5">
                                 <div class="flex justify-between w-[260px] items-center mt-4">
-                                    @if($patients->onFirstPage())
+                                    @if($prescriptions->onFirstPage())
                                         <span class="text-gray-500 px-4 py-1 text-sm bg-gray-200 rounded">Previous</span>
                                     @else
-                                        <a href="{{ $patients->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}"
+                                        <a href="{{ $prescriptions->previousPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                            class="px-4 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600">
                                             Previous
                                         </a>
                                     @endif
 
                                     <span class="text-gray-700">
-                                        Page {{ $patients->currentPage() }} of {{ $patients->lastPage() }}
+                                        Page {{ $prescriptions->currentPage() }} of {{ $prescriptions->lastPage() }}
                                     </span>
 
-                                    @if ($patients->hasMorePages())
-                                        <a href="{{ $patients->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}"
+                                    @if ($prescriptions->hasMorePages())
+                                        <a href="{{ $prescriptions->nextPageUrl() . '&' . http_build_query(request()->except('page')) }}"
                                            class="px-4 py-1 bg-red-500 text-sm text-white rounded hover:bg-red-600">
                                             Next
                                         </a>

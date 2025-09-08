@@ -35,4 +35,18 @@ class Prescription extends Model
     ];
     protected $table = 'prescriptions';
 
+public function scopeSearch($query, $term)
+{
+    if ($term) {
+        $term = "%{$term}%";
+        return $query->where(function ($q) use ($term) {
+            $q->where('patient_name', 'like', $term)
+              ->orWhere('patient_phone', 'like', $term)
+              ->orWhereDate('prescription_date', $term);
+        });
+    }
+
+    return $query; // if no search term, return all
+}
+
 }

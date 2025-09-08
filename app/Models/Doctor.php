@@ -22,14 +22,12 @@ class Doctor extends Model
       'degree',
       'offline_fees',
       'online_fees',
-  
         'availabel_days',
         'available_time',
         'year_of_experince',
         'associated_hospitals',
         'address',
         'status',
-      
         'is_active',
         'created_at',
         'updated_at'

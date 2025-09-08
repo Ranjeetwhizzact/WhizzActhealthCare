@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::get('/edituser/{id}',[AuthController::class,'edituser'])->name('edituser');
         Route::get('/',[HomeController::class,'index'])->name('dashboard');
+        Route::get('view-prescription',[PrescriptionController::class,'index']);
         Route::get('/createdoctor',[DoctorController::class,'createdoctor']);
         Route::post('/storepatient',[PatientController::class,'storepatient']);
         Route::delete('/deletepatient/{id}',[PatientController::class,'deletepatient'])->name('deletepatient');
@@ -59,7 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/viewprescriptions/{id}',[PrescriptionController::class,'prescriptionForm'])->name('viewprescriptions');
         Route::post('/storerescription',[PrescriptionController::class,'storerescription']);
         Route::get('/prescription/{id}/pdf', [PrescriptionController::class, 'generatePrescription']);
-
+        Route::get('/error',[PrescriptionController::class,'error']);
 
         Route::post('/getrecording/{id}',[AppointmentController::class,'getRecording'])->name('getRecording');
 

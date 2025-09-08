@@ -134,4 +134,19 @@ public function storerescription(Request $req)
     return redirect()->back()->with('success', 'Prescription saved successfully.');
 }
 
+
+
+ public function index(Request $request)
+    {
+        $search = $request->input('search');
+
+        $prescriptions = Prescription::search($search)
+            ->orderBy('prescription_date', 'desc')
+            ->paginate(10); // pagination
+
+        return view('viewprescription', compact('prescriptions', 'search'));
+    }
+
+
+
 }

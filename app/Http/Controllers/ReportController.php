@@ -22,10 +22,7 @@ class ReportController extends Controller
         $appoint_id = Appointment::find($patientId);
         $doctor = Doctor::where('email', $userEmail)->first();
         
-        if (!$appoint_id) {
-            Log::error('Schedule not found', ['id' => $id]);
-            return response()->json(['error' => 'Schedule not found'], 404);
-        }
+       
         
         // $report =  DB::table('appointments as a')
         // ->join('patients as p', 'a.client_id', '=', 'p.id')
@@ -50,9 +47,21 @@ class ReportController extends Controller
         //         'd.last_name as doctor_last_name',
         //     )
         //     ->get();
-        $report = Prescription::where('appointment_id',$patientId)->get();
-        
-      
+ $report = Prescription::where('appointment_id', $patientId)->get();
+
+if ($report->isEmpty()) {
+    // no prescriptions found
+    return view('error', [
+        'message' => 'Please add the prescription to view',
+    ]);
+} else {
+    // prescriptions found
+    return view('report', [
+        'report' => $report,
+    ]);
+}
+
+
         
         // return $report;
         
@@ -61,6 +70,5 @@ class ReportController extends Controller
      // This will dump and die the result to inspect it
     
 
-        return view('report', ['report'=>$report]);
     }
 }

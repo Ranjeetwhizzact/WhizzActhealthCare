@@ -87,8 +87,8 @@
                                         <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Document Type</label>
                                         <select class="w-full border border-gray-300 p-2 rounded-lg" name="id_type" >
                                             <option value="Aadhar Card"{{ isset($patient->id_type) && $patient->id_type == "Aadhar Card" ? 'selected' : '' }}>Aadhar card</option>
-                                            <option value="Pen Card"{{ isset($patient->id_type) && $patient->id_type == "Pen Card" ? 'selected' : '' }}>Pen Card</option>
-                                            <option value="Driving Licence"{{ isset($patient->id_type) && $patient->id_type == "Driving Licence" ? 'selected' : '' }}>Driving Licence</option>
+                                            <option value="Pan Card"{{ isset($patient->id_type) && $patient->id_type == "Pen Card" ? 'selected' : '' }}>Pan Card</option>
+                                            <option value="Driving licence"{{ isset($patient->id_type) && $patient->id_type == "Driving Licence" ? 'selected' : '' }}>Driving licence</option>
 
 
                                         </select>
@@ -96,7 +96,7 @@
 
                                      <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
                                         <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Upload Document</label>
-                                        <input type="file" name="id_document" value="{{isset($patient->id_document)?$patient->id_document:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Third Party Administrator name">
+                                        <input type="file" name="id_document" value="{{isset($patient->id_document)?$patient->id_document:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Third Party Administrator name"  accept="application/pdf" >
                                     </div>
 
                                     <div class="col-span-4">
@@ -119,8 +119,8 @@
                                             <input type="text" name="proposal_number" value="{{isset($patient->proposal_number)?$patient->proposal_number:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Proposal number" >
                                         </div>
                                          <div class="col-span-4 sm:col-span-3 md:col-span-2 lg:col-span-1">
-                                            <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Upload Pdf</label>
-                                            <input type="file" name="documents" value="{{isset($patient->documents)?$patient->documents:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder="Proposal number">
+                                            <label class="block text-gray-700 font-mediublock text-gray-700 font-medium mb-2 text-sm">Report Pdf</label>
+                                            <input type="file" name="documents" value="{{isset($patient->documents)?$patient->documents:''}}" class="w-full border border-gray-300 p-2 rounded-lg phonenumber" placeholder=""         accept="application/pdf" >
                                         </div>
                                 </div>
                          </div>
